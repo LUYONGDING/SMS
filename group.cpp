@@ -67,7 +67,7 @@ QString group::getinfo() const
     return info;
 }
 
-group & group::operator= (group & another)  //重写=操作符
+group & group::operator= (const group & another)  //重写=操作符
 {
     this->groupID = another.groupID;
     this->groupName = another.groupName;

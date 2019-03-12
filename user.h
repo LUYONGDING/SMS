@@ -28,7 +28,7 @@ public:
     //获得信息
     QString getinfo() const;
 
-    user & operator= (user & another); //重写=操作符
+    user & operator= (const user & another); //重写=操作符
     bool operator ==(user & another) const;  //重写==操作符
     bool operator !=(user & another) const;  //重写!=操作符
 

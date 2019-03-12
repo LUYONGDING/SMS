@@ -22,6 +22,19 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug()<<"不相等";
     }
 
+    user u1(1,"user1","123",2);
+
+    group g1(&u1,"gp1","li4",1);
+
+    department d1(1,&g1,"study","haha");
+    department d2(1,&g1,"fan","hehe");
+    if(d1 != d2)
+    {
+        qDebug()<<"不相等";
+    }
+    qDebug()<<d1.getInfo();
+    qDebug()<<d2.getInfo();
+
 }
 
 MainWindow::~MainWindow()

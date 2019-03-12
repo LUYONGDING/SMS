@@ -55,7 +55,7 @@ QString student::getinfo() const
     return info;
 }
 
-student & student::operator =(student & another)   //重载=操作符
+student & student::operator =(const student & another)   //重载=操作符
 {
     this->studentID = another.studentID;
     this->studentSex = another.studentSex;

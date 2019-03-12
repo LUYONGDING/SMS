@@ -9,6 +9,7 @@
 #include "user.h"
 #include "group.h"
 #include "student.h"
+#include "department.h"
 using namespace std;
 
 namespace Ui {

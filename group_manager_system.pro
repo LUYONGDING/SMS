@@ -28,13 +28,15 @@ SOURCES += main.cpp\
     dbconnt.cpp \
     user.cpp \
     group.cpp \
-    student.cpp
+    student.cpp \
+    department.cpp
 
 HEADERS  += mainwindow.h \
     dbconnt.h \
     debugmode.h \
     user.h \
     group.h \
-    student.h
+    student.h \
+    department.h
 
 FORMS    += mainwindow.ui

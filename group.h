@@ -28,7 +28,7 @@ public:
     //获得信息
     QString getinfo() const;
 
-    group & operator= (group & another); //重写=操作符
+    group & operator= (const group & another); //重写=操作符
     bool operator ==(group & another) const;  //重写==操作符
     bool operator !=(group & another) const;  //重写!=操作符
 

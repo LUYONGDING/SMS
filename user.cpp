@@ -62,7 +62,7 @@ QString user::getinfo() const
     return info;
 }
 
-user & user::operator= (user & another) //重写=操作符
+user & user::operator= (const user & another) //重写=操作符
 {
     this->userID = another.userID;
     this->userName = another.userName;
