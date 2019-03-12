@@ -19,7 +19,7 @@ DBconnt::DBconnt()  //构造函数
     this->HostName = "127.0.0.1";
     this->UserName = "root";
     this->Password = "root";
-    this->DatabaseName = "mydatabase";
+    this->DatabaseName = "group_manager_system";
     this->Port = 3306;
 
 
