@@ -9,7 +9,7 @@ department::department(int departmentID, const group * gp, QString departmentNam
 {
     if(NULL == gp)
     {
-        qDebug() <<"group * is NULL";
+        qDebug() <<"NULL Pointer";
         return;
     }
     this->departmentID = departmentID;
@@ -25,6 +25,11 @@ void department::setDepartmentID(int departmentID)
 }
 void department::setDepartmentGroupID(const group * gp)
 {
+    if(NULL == gp)
+    {
+        qDebug() <<"NULL Pointer";
+        return;
+    }
     this->departmentGroupID = gp->getGroupID();
 }
 void department::setDepartmentName(QString departmentName)

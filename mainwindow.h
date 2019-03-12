@@ -4,12 +4,14 @@
 #include <QMainWindow>
 #include <QString>
 #include <QDebug>
-#include <iostream>
+
 #include "dbconnt.h"
 #include "user.h"
 #include "group.h"
 #include "student.h"
 #include "department.h"
+#include "studentdependence.h"
+
 using namespace std;
 
 namespace Ui {

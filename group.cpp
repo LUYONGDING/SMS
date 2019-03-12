@@ -10,7 +10,7 @@ group::group(user * user, QString groupName, QString groupTeacher, int groupType
 {
     if(NULL==user)
     {
-        qDebug() << "user is NULL!";
+        qDebug() << "NULL Pointer!";
         return;
     }
     this->groupID = user->getUserID();
@@ -25,6 +25,11 @@ group::~group()
 
 void group::setGroupID(user * user)
 {
+    if(NULL==user)
+    {
+        qDebug() << "NULL Pointer!";
+        return;
+    }
     this->groupID = user->getUserID();
 }
 void group::setGroupName(QString groupName)

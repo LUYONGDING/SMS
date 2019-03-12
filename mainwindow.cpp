@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug()<<d1.getInfo();
     qDebug()<<d2.getInfo();
 
+    studentDependence * dep1 = new studentDependence(&g1,&d1,"buzhang",1,&stu1);
+    qDebug()<<dep1->getInfo();
+    delete dep1;
 }
 
 MainWindow::~MainWindow()
