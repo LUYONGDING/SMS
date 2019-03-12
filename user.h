@@ -4,9 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
-#include <iostream>
 #include "debugmode.h"
-using namespace std;
 
 class user : public QObject
 {
@@ -14,15 +12,15 @@ class user : public QObject
 public:
     //explicit user(QObject *parent = 0);
     user();
-    user(int id, QString userName, QString userPasswd,int userType); //构造函数
+    user(int userID, QString userName, QString userPasswd,int userType); //构造函数
     ~user();    //析构函数
 
     //设置和获得成员接口
-    void setID(int id);
+    void setUserID(int userID);
     void setUserName(QString userName);
     void setUserPasswd(QString userPasswd);
     void setUserType(int userType);
-    int getID() const;
+    int getUserID() const;
     QString getUserName() const;
     QString getUserPasswd() const;
     int getUserType() const;
@@ -36,7 +34,7 @@ public:
 
 protected:
 private:
-    int id; //用户ID
+    int userID; //用户ID
     QString userName;   //用户名
     QString userPasswd; //用户密码
     int userType;

@@ -82,7 +82,7 @@ DBconnt::~DBconnt()
     }
 }
 
-QString DBconnt::getDBinfo()
+QString DBconnt::getDBinfo() const
 {
     if(false == this->db->isOpen())  //判断数据库是否已经打开
     {

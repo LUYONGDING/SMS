@@ -6,18 +6,18 @@
 //}
 
 user::user(){}
-user::user(int id, QString userName, QString userPasswd, int userType)
+user::user(int userID, QString userName, QString userPasswd, int userType)
 {
-    this->id = id;
+    this->userID = userID;
     this->userName = userName;
     this->userPasswd = userPasswd;
     this->userType = userType;
 }
 user::~user(){}
 
-void user::setID(int id)
+void user::setUserID(int userID)
 {
-    this->id = id;
+    this->userID = userID;
 }
 
 void user::setUserName(QString userName)
@@ -35,9 +35,9 @@ void user::setUserType(int userType)
     this->userType = userType;
 }
 
-int user::getID() const
+int user::getUserID() const
 {
-    return this->id;
+    return this->userID;
 }
 QString user::getUserName() const
 {
@@ -55,7 +55,7 @@ int user::getUserType() const
 QString user::getinfo() const
 {
     QString info = QString ("userID:%1 , userName:%2 , userPasswd:%3 , userType:%4")
-                            .arg(this->id)
+                            .arg(this->userID)
                             .arg(this->userName)
                             .arg(this->userPasswd)
                             .arg(this->userType);
@@ -64,7 +64,7 @@ QString user::getinfo() const
 
 user & user::operator= (user & another) //重写=操作符
 {
-    this->id = another.id;
+    this->userID = another.userID;
     this->userName = another.userName;
     this->userPasswd = another.userPasswd;
     this->userType = another.userType;
@@ -73,7 +73,7 @@ user & user::operator= (user & another) //重写=操作符
 }
 bool user::operator ==(user & another) const //重写==操作符
 {
-    if(this->id == another.id && this->userName == another.userName &&
+    if(this->userID == another.userID && this->userName == another.userName &&
             this->userPasswd == another.userPasswd && this->userType == another.userType)
     {
         return true;

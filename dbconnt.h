@@ -21,7 +21,7 @@ public:
 
     QSqlQuery * query;    //数据库操作类
 
-    QString getDBinfo();   //获得数据库信息
+    QString getDBinfo() const;   //获得数据库信息
     void closeDB(); //关闭数据库
     void openDB();
 

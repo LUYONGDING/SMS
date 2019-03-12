@@ -2,10 +2,8 @@
 #define GROUP_H
 
 #include "user.h"
-#include <iostream>
 #include <QString>
 #include <QObject>
-using namespace std;
 
 class group : public QObject
 {
