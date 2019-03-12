@@ -27,8 +27,8 @@ public:
     QString getinfo() const;
 
     student & operator =(student & another);   //重载=操作符
-    bool operator ==(student & another);    //重载==操作符
-    bool operator !=(student & another);    //重载!=操作符
+    bool operator ==(student & another) const;    //重载==操作符
+    bool operator !=(student & another) const;    //重载!=操作符
 
 
 

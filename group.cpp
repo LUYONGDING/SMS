@@ -60,10 +60,10 @@ int group::getGroupType() const
 QString group::getinfo() const
 {
     QString info = QString ("groupID:%1 , groupName:%2 , groupTeacher:%3 , groupType:%4")
-                            .arg(this->groupID)
-                            .arg(this->groupName)
-                            .arg(this->groupTeacher)
-                            .arg(this->groupType);
+            .arg(this->groupID)
+            .arg(this->groupName)
+            .arg(this->groupTeacher)
+            .arg(this->groupType);
     return info;
 }
 

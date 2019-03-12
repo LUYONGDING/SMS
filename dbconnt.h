@@ -15,7 +15,7 @@ class DBconnt : public QObject  //数据库连接类
 {
     Q_OBJECT
 public:
-//    explicit DBconnt(QObject *parent = 0);
+    //    explicit DBconnt(QObject *parent = 0);
     DBconnt();
     ~DBconnt();
 

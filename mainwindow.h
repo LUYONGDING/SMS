@@ -8,6 +8,7 @@
 #include "dbconnt.h"
 #include "user.h"
 #include "group.h"
+#include "student.h"
 using namespace std;
 
 namespace Ui {

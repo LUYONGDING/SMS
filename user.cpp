@@ -55,10 +55,10 @@ int user::getUserType() const
 QString user::getinfo() const
 {
     QString info = QString ("userID:%1 , userName:%2 , userPasswd:%3 , userType:%4")
-                            .arg(this->userID)
-                            .arg(this->userName)
-                            .arg(this->userPasswd)
-                            .arg(this->userType);
+            .arg(this->userID)
+            .arg(this->userName)
+            .arg(this->userPasswd)
+            .arg(this->userType);
     return info;
 }
 
