@@ -8,50 +8,59 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->connt = new DBconnt();
-    qDebug() << this->connt->getDBinfo();
+    this->db = new DBconnt();
+    qDebug() << this->db->getDBinfo();
 
-    student stu1(1,true,"王五");
+    this->setWindowTitle("学生社团管理系统");   //设置窗口标题
+    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
+    ui->comboBox_userType->addItem("教师");
+    ui->comboBox_userType->addItem("社团或机构");
+    ui->comboBox_userType->addItem("管理员");
 
-    qDebug()<<stu1.getinfo();
-
-    student stu2;
-    //stu2 = stu1;
-//    if(stu2!=stu1)
-//    {
-//        qDebug()<<"不相等";
-//    }
-
-    user u1(1,"user1","123",2);
-
-    root r1(1,&u1,"wang5",1);
-    qDebug()<<r1.getInfo();
-    root r2;
-    r2 = r1;
-    if(r2==r1)
-    {
-        qDebug()<<"相等";
-    }
-
-    teacher t1(1,&u1,"li4",1);
-
-    group g1(&u1,"gp1",&t1,1);
-
-    department d1(1,&g1,"study","haha");
-    department d2(1,&g1,"fan","hehe");
-//    if(d1 != d2)
-//    {
-//        qDebug()<<"不相等";
-//    }
-    qDebug()<<d1.getInfo();
-    qDebug()<<d2.getInfo();
-
-    studentDependence * dep1 = new studentDependence(&g1,&d1,"buzhang",1,&stu1);
-    qDebug()<<dep1->getInfo();
-    delete dep1;
+    connect(ui->pushButton_clear,&QPushButton::clicked,[=](){   //清除按钮：点击后将用户名和密码置空
+        ui->lineEdit_passwd->setText("");
+        ui->lineEdit_userName->setText("");
+    });
+    connect(ui->pushButton_login,&QPushButton::clicked,this,&MainWindow::userLogin);
 }
 
 MainWindow::~MainWindow()
 {
+    if(NULL == db)
+    {
+        delete db;
+    }
+
     delete ui;
+}
+void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
+{
+    QPainter painter(this);
+    painter.drawPixmap(0,0,520,520,QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
+}
+void MainWindow::userLogin()
+{
+    if(ui->comboBox_userType->currentText() == QString("教师"))
+    {
+        //QMessageBox::information(NULL,"login","登录：教师");
+        bool ret = false;
+
+//        QString sql = QString("SELECT * FROM `user` WHERE `user`.user_name = '%1' AND `user`.user_passwd = '%2'")
+//         .arg(ui->lineEdit_userName->text())
+//         .arg(ui->lineEdit_passwd->text());
+//        db->query->exec(sql);
+       ret = db->query->prepare("SELECT * FROM `user` WHERE `user`.user_name = :name AND `user`.user_passwd = :passwd AND `user`.user_type = :type");
+        db->query->bindValue(":name",ui->lineEdit_userName->text());
+        db->query->bindValue(":passwd",ui->lineEdit_passwd->text());
+        db->query->bindValue(":type",1);
+        db->query->exec();
+        if(!(db->query->next()))
+        {
+            //QString error = QString(db->query->lastError().text());
+            QMessageBox::critical(this,"错误",db->query->lastQuery());
+        }else
+        {
+            QMessageBox::information(this,"login","成功");
+        }
+    }
 }

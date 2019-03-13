@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QString>
 #include <QDebug>
+#include <QPixmap>
+#include <QPainter>
+#include <QPushButton>
+#include <QMessageBox>
 
 #include "dbconnt.h"
 #include "user.h"
@@ -27,11 +31,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+    void paintEvent(QPaintEvent *event);
+private slots:
+    void userLogin();
 private:
     Ui::MainWindow *ui;
 
-    DBconnt * connt;
+    DBconnt * db;
 
 };
 

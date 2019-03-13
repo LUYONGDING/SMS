@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/mainWin">
+        <file>Icon/guishen_0131ev05b08mg01.jpg</file>
+        <file>Icon/guishen_0131ev05b08mg01.png</file>
+        <file>background/guishen_0039ev05a07.jpg</file>
+    </qresource>
+</RCC>
