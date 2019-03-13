@@ -32,8 +32,8 @@ public:
     QString getInfo() const;    //获得信息
 
     teacher & operator =(teacher & another);    //重载=操作符
-    bool operator ==(teacher & another);    //重载==操作符
-    bool operator !=(teacher & another);    //重载!=操作符
+    bool operator ==(teacher & another) const;    //重载==操作符
+    bool operator !=(teacher & another) const;    //重载!=操作符
 
 protected:
 private:

@@ -12,6 +12,7 @@
 #include "department.h"
 #include "studentdependence.h"
 #include "teacher.h"
+#include "root.h"
 
 using namespace std;
 

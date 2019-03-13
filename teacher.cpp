@@ -76,7 +76,7 @@ teacher & teacher::operator =(teacher & another)    //重载=操作符
     this->teacherSex = another.teacherSex;
     return *this;
 }
-bool teacher::operator ==(teacher & another)    //重载==操作符
+bool teacher::operator ==(teacher & another) const   //重载==操作符
 {
     if(this->teacherID == another.teacherID
             && this->teacherUserID == another.teacherUserID
@@ -89,7 +89,7 @@ bool teacher::operator ==(teacher & another)    //重载==操作符
         return false;
     }
 }
-bool teacher::operator !=(teacher & another)    //重载!=操作符
+bool teacher::operator !=(teacher & another) const   //重载!=操作符
 {
     if(*(this) == another)
     {

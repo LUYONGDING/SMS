@@ -24,6 +24,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     user u1(1,"user1","123",2);
 
+    root r1(1,&u1,"wang5",1);
+    qDebug()<<r1.getInfo();
+    root r2;
+    r2 = r1;
+    if(r2==r1)
+    {
+        qDebug()<<"相等";
+    }
+
     teacher t1(1,&u1,"li4",1);
 
     group g1(&u1,"gp1",&t1,1);
