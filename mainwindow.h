@@ -11,6 +11,7 @@
 #include "student.h"
 #include "department.h"
 #include "studentdependence.h"
+#include "teacher.h"
 
 using namespace std;
 

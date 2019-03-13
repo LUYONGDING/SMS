@@ -6,16 +6,16 @@
 
 //}
 group::group(){}
-group::group(user * user, QString groupName, QString groupTeacher, int groupType)
+group::group(user * user, QString groupName, teacher * thr, int groupType)
 {
-    if(NULL==user)
+    if(NULL==user || NULL == thr)
     {
         qDebug() << "NULL Pointer!";
         return;
     }
     this->groupID = user->getUserID();
     this->groupName = groupName;
-    this->groupTeacher = groupTeacher;
+    this->groupTeacherID = thr->getTeacherID();
     this->groupType = groupType;
 }
 group::~group()
@@ -36,9 +36,9 @@ void group::setGroupName(QString groupName)
 {
     this->groupName = groupName;
 }
-void group::setGroupTeacher(QString groupTeacher)
+void group::setGroupTeacherID(teacher * thr)
 {
-    this->groupTeacher = groupTeacher;
+    this->groupTeacherID = thr->getTeacherID();
 }
 void group::setGroupType(int groupType)
 {
@@ -53,9 +53,9 @@ QString group::getGroupName() const
 {
     return this->groupName;
 }
-QString group::getGroupTeacher() const
+int group::getGroupTeacherID() const
 {
-    return this->groupTeacher;
+    return this->groupTeacherID;
 }
 int group::getGroupType() const
 {
@@ -64,10 +64,10 @@ int group::getGroupType() const
 
 QString group::getinfo() const
 {
-    QString info = QString ("groupID:%1 , groupName:%2 , groupTeacher:%3 , groupType:%4")
+    QString info = QString ("groupID:%1 , groupName:%2 , groupTeacherID:%3 , groupType:%4")
             .arg(this->groupID)
             .arg(this->groupName)
-            .arg(this->groupTeacher)
+            .arg(this->groupTeacherID)
             .arg(this->groupType);
     return info;
 }
@@ -76,7 +76,7 @@ group & group::operator= (const group & another)  //重写=操作符
 {
     this->groupID = another.groupID;
     this->groupName = another.groupName;
-    this->groupTeacher = another.groupTeacher;
+    this->groupTeacherID = another.groupTeacherID;
     this->groupType = another.groupType;
 
     return *this;
@@ -84,7 +84,7 @@ group & group::operator= (const group & another)  //重写=操作符
 bool group::operator== (group & another) const  //重写==操作符
 {
     if(this->groupID == another.groupID && this->groupName == another.groupName
-            && this->groupTeacher == another.groupTeacher && this->groupType == another.groupType)
+            && this->groupTeacherID == another.groupTeacherID && this->groupType == another.groupType)
     {
         return true;
     }

@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     group.cpp \
     student.cpp \
     department.cpp \
-    studentdependence.cpp
+    studentdependence.cpp \
+    teacher.cpp
 
 HEADERS  += mainwindow.h \
     dbconnt.h \
@@ -39,6 +40,7 @@ HEADERS  += mainwindow.h \
     group.h \
     student.h \
     department.h \
-    studentdependence.h
+    studentdependence.h \
+    teacher.h
 
 FORMS    += mainwindow.ui
