@@ -17,6 +17,7 @@
 #include "studentdependence.h"
 #include "teacher.h"
 #include "root.h"
+#include "registform.h"
 
 using namespace std;
 
@@ -32,12 +33,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
 private slots:
-    void userLogin();
+    void userLogin();   //登录槽函数
 private:
     Ui::MainWindow *ui;
 
     DBconnt * db;
+
+    registForm * regist;
 
 };
 

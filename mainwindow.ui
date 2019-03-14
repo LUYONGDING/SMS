@@ -67,10 +67,17 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_userName"/>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBox_userType"/>
+           <widget class="QLineEdit" name="lineEdit_userName">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string/>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer_5">
@@ -97,7 +104,7 @@
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
+             <enum>QSizePolicy::Expanding</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -124,7 +131,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>12</width>
+              <width>16</width>
               <height>20</height>
              </size>
             </property>
@@ -132,6 +139,12 @@
           </item>
           <item>
            <widget class="QLineEdit" name="lineEdit_passwd">
+            <property name="inputMask">
+             <string/>
+            </property>
+            <property name="text">
+             <string extracomment="密码："/>
+            </property>
             <property name="echoMode">
              <enum>QLineEdit::Password</enum>
             </property>
