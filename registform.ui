@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>611</width>
+    <width>610</width>
     <height>360</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>610</width>
+    <height>360</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>610</width>
+    <height>360</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -130,7 +142,7 @@
         <widget class="QLineEdit" name="lineEdit_teacher_userPasswd"/>
        </item>
        <item row="2" column="2">
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="lineEdit_teacher_userPasswd2"/>
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="label_teacher_userName">
@@ -157,7 +169,7 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineEdit_teacher_userName"/>
        </item>
        <item row="3" column="2">
         <widget class="QLineEdit" name="lineEdit_teacherName">
@@ -462,6 +474,19 @@
        <string>注册</string>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_11">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <widget class="QPushButton" name="pushButton_cancel">

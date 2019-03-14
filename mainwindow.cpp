@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->db = new DBconnt();
     qDebug() << this->db->getDBinfo();
 
+    regist = new registForm(this);
+
     this->setMouseTracking(true);
 
     this->setWindowTitle("学生社团管理系统");   //设置窗口标题
@@ -23,15 +25,25 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_login,&QPushButton::clicked,this,&MainWindow::userLogin);    //连接登陆按钮和登陆槽函数
 
     ui->label_regist->installEventFilter(this); //安装事件过滤器，监听点击事件
+
+//    connect(this->regist,&registForm::destroyed,[=](){
+//        this->show();
+//    });
+
 }
 
 MainWindow::~MainWindow()
 {
-    if(NULL == db)
+    if(NULL == this->db)
     {
         delete db;
+        db == NULL;
     }
-
+    if(NULL == this->regist)
+    {
+        delete regist;
+        regist == NULL;
+    }
     delete ui;
 }
 void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
@@ -91,7 +103,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         {
             //QMessageBox::information(this,"regist","注册");
             //code
-            regist = new registForm(this);
             regist->show();
             return true;
         }
