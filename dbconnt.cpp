@@ -38,17 +38,15 @@ DBconnt::DBconnt()  //构造函数
     this->db->setDatabaseName(this->DatabaseName);   //数据库名字
     this->db->setPort(this->Port);
 
-    if(!this->db->open())
-    {
-        qDebug() << this->db->lastError().text();
-        return;
-    }
+//    if(!this->db->open())
+//    {
+//        qDebug() << this->db->lastError().text();
+//        return;
+//    }
+//#if debug_mode
+//    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
+//#endif
 
-#if debug_mode
-    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
-#endif
-
-    this->query = new QSqlQuery();  //开辟空间：数据库操作类
 
 }
 
@@ -106,6 +104,7 @@ void DBconnt::closeDB()
         return;
     }
     qDebug() << "关闭数据库:" <<this->db->databaseName();
+    delete this->query;
     this->db->close();   //关闭数据库
 
 }
@@ -130,5 +129,9 @@ void DBconnt::openDB()
     {
         qDebug() << this->db->lastError().text();
         return;
+    }
+    if(NULL == this->query)
+    {
+        this->query = new QSqlQuery();  //开辟空间：数据库操作类
     }
 }

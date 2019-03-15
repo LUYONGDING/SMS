@@ -54,37 +54,39 @@ void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
 
 void MainWindow::userLogin()    //登陆槽函数
 {
-        bool ret = false;
-       ret = db->query->prepare("SELECT * FROM `user` WHERE `user`.user_name = :name AND `user`.user_passwd = :passwd");
-        db->query->bindValue(":name",ui->lineEdit_userName->text());
-        db->query->bindValue(":passwd",ui->lineEdit_passwd->text());
-        ret = db->query->exec();
-        if(!ret)
+    db->openDB();
+    bool ret = false;
+    ret = db->query->prepare("SELECT * FROM `user` WHERE `user`.user_name = :name AND `user`.user_passwd = :passwd");
+    db->query->bindValue(":name",ui->lineEdit_userName->text());
+    db->query->bindValue(":passwd",ui->lineEdit_passwd->text());
+    ret = db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(this,"错误",QString(db->query->lastError().text()));
+    }
+    else if(!(db->query->next()))
+    {
+        QMessageBox::critical(this,"错误","账号或密码错误");
+    }else
+    {
+        int type = db->query->value("user_type").toInt();
+        if(0==type)
         {
-            QMessageBox::critical(this,"错误",QString(db->query->lastError().text()));
+            QMessageBox::information(this,"login","管理员登录成功");
+            //code
         }
-        else if(!(db->query->next()))
+        if(1==type)
         {
-            QMessageBox::critical(this,"错误","账号或密码错误");
-        }else
-        {
-            int type = db->query->value("user_type").toInt();
-            if(0==type)
-            {
-                QMessageBox::information(this,"login","管理员登录成功");
-                //code
-            }
-            if(1==type)
-            {
-                QMessageBox::information(this,"login","教师登录成功");
-                //code
-            }
-            if(2==type)
-            {
-                QMessageBox::information(this,"login","社团登录成功");
-                //code
-            }
+            QMessageBox::information(this,"login","教师登录成功");
+            //code
         }
+        if(2==type)
+        {
+            QMessageBox::information(this,"login","社团登录成功");
+            //code
+        }
+    }
+    db->closeDB();
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
