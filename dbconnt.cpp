@@ -46,8 +46,6 @@ DBconnt::DBconnt()  //构造函数
 //#if debug_mode
 //    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
 //#endif
-
-
 }
 
 DBconnt::~DBconnt()
@@ -130,8 +128,5 @@ void DBconnt::openDB()
         qDebug() << this->db->lastError().text();
         return;
     }
-    if(NULL == this->query)
-    {
-        this->query = new QSqlQuery();  //开辟空间：数据库操作类
-    }
+    this->query = new QSqlQuery();  //开辟空间：数据库操作类
 }

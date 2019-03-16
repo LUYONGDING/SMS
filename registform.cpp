@@ -11,6 +11,9 @@ registForm::registForm(QWidget *parent) :
 
     ui->setupUi(this);
 
+    this->setWindowTitle("用户注册");   //设置窗口标题
+    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
+
     this->db = new DBconnt();   //初始化数据库类
     this->us = new user();  //初始化用户类
     this->tch = new teacher();  //初始化教师类
@@ -18,6 +21,9 @@ registForm::registForm(QWidget *parent) :
     //加入教师按钮组
     this->btnGroup.addButton(ui->radioButton_male,1);
     this->btnGroup.addButton(ui->radioButton_female,0);
+    //加入社团按钮组
+    this->btnGroup2.addButton(ui->radioButton_agency,0);
+    this->btnGroup2.addButton(ui->radioButton_group,1);
     ui->comboBox->addItem("教师");
     ui->comboBox->addItem("社团");
     ui->widget_group->hide();
@@ -46,8 +52,23 @@ registForm::registForm(QWidget *parent) :
             return;
         }
     });
+    connect(ui->lineEdit_group_user_passwd,&QLineEdit::editingFinished,[=](){
+        if(!rx.exactMatch(ui->lineEdit_group_user_passwd->text())
+                && !ui->lineEdit_group_user_passwd->text().isEmpty())
+        {
+            QMessageBox::warning(this,"警告","密码只能是数字或者大小写字母！");
+            return;
+        }
+    });
     connect(ui->lineEdit_teacher_userPasswd2,&QLineEdit::editingFinished,[=](){
         if(ui->lineEdit_teacher_userPasswd2->text() != ui->lineEdit_teacher_userPasswd->text()) //密码检查
+        {
+            QMessageBox::warning(this,"警告","两次输入的密码不对，这样会可能会导致注册失败，请检查输入的密码！");
+            return;
+        }
+    });
+    connect(ui->lineEdit_group_userPasswd2,&QLineEdit::editingFinished,[=](){
+        if(ui->lineEdit_group_userPasswd2->text() != ui->lineEdit_group_user_passwd->text())
         {
             QMessageBox::warning(this,"警告","两次输入的密码不对，这样会可能会导致注册失败，请检查输入的密码！");
             return;
@@ -71,6 +92,11 @@ registForm::~registForm()
         delete tch;
     }
     delete ui;
+}
+void registForm::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
+{
+    QPainter painter(this);
+    painter.drawPixmap(0,0,610,610,QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
 }
 void registForm::SetNULLTeacherEdit()
 {
@@ -124,6 +150,40 @@ bool registForm::teacherRegistCheck()
     }
     return true;
 }
+bool registForm::groupRegistCheck()
+{
+    if(!rx.exactMatch(ui->lineEdit_group_user_passwd->text())
+            && !ui->lineEdit_group_user_passwd->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","密码只能是数字或者大小写字母！");
+        return false;
+    }
+    if(ui->lineEdit_group_userPasswd2->text() != ui->lineEdit_group_user_passwd->text())
+    {
+        QMessageBox::warning(this,"警告","两次输入的密码不对，这样会可能会导致注册失败，请检查输入的密码！");
+        return false;
+    }
+    if(ui->lineEdit_groupName->text().isEmpty())
+    {
+        QMessageBox::critical(this,"错误","社团名不能为空");
+        return false;
+    }
+    if(ui->lineEdit_groupTeacher->text().isEmpty())
+    {
+        QMessageBox::critical(this,"错误","社团指导老师不能为空");
+        return false;
+    }
+    if(ui->lineEdit_group_userName->text().isEmpty())
+    {
+        QMessageBox::critical(this,"错误","用户名不能为空");
+        return false;
+    }
+    if(ui->lineEdit_group_user_passwd->text().isEmpty())
+    {
+        QMessageBox::critical(this,"错误","用户密码不能为空");
+        return false;
+    }
+}
 void registForm::userRegist()
 {
     if(ui->comboBox->currentText()=="教师")
@@ -144,6 +204,7 @@ void registForm::userRegist()
         //插入数据库
         bool ret = false;
         this->db->openDB();
+        this->db->db->transaction();
         this->db->query->prepare("insert into user (user_name,user_passwd,user_type) values(:username,:userpasswd,:usertype)");
         this->db->query->bindValue(":username",us->getUserName());
         this->db->query->bindValue(":userpasswd",us->getUserPasswd());
@@ -152,19 +213,22 @@ void registForm::userRegist()
         if(!ret)
         {
             QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+            this->db->db->rollback();
+            this->db->closeDB();
             return;
         }
         else
         {
             ret = false;
             this->db->openDB();
-            this->db->query->prepare("select * from user where user_name = :username");
+            this->db->query->prepare("select * from user where user_name = :username"); //查询出用户ID
             this->db->query->bindValue(":username",us->getUserName());
             ret = db->query->exec();
             if(db->query->next())
             {
-                this->us->setUserID(db->query->value("user_id").toInt());
-                this->tch->setTeahcerUserID(us);
+                this->us->setUserID(db->query->value("user_id").toInt());   //设置用户ID
+                this->tch->setTeahcerUserID(us);    //设置teacher类中的用户ID
+                //插入用户类
                 ret = false;
                 this->db->query->prepare("insert into teacher (teacher_user_id,teacher_name,teacher_sex) values(:userID,:name,:sex)");
                 this->db->query->bindValue(":userID",tch->getTeacherUserID());
@@ -174,6 +238,8 @@ void registForm::userRegist()
                 if(!ret)
                 {
                     QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+                    this->db->db->rollback();
+                    this->db->closeDB();
                     return;
                 }
             }
@@ -182,15 +248,23 @@ void registForm::userRegist()
                 if(!ret)
                 {
                     QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+                    this->db->db->rollback();
+                    this->db->closeDB();
                     return;
                 }
             }
         }
+        this->db->db->commit();
         QMessageBox::critical(this,"注册成功",QString("注册成功！请牢记您的个人信息：%1").arg(this->us->getinfo()));
+        this->db->closeDB();
     }
-    this->db->closeDB();
     if(ui->comboBox->currentText()=="社团")
     {
+        bool check =false;
+        if (false == check)
+        {
+            return;
+        }
     }
 
 }

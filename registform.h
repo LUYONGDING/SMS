@@ -9,6 +9,7 @@
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QRegExp>
+#include <QPainter>
 
 #include "dbconnt.h"
 #include "user.h"
@@ -30,6 +31,8 @@ public:
     void SetNULLTeacherEdit();  //置空教师注册控件
     void SetNULLGroupEdit();    //置空社团注册控件
     bool teacherRegistCheck(); //注册前检查
+    bool groupRegistCheck(); //注册前检查
+    void paintEvent(QPaintEvent *event);
 private:
 signals:
 private:

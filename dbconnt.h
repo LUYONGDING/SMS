@@ -24,11 +24,9 @@ public:
     QString getDBinfo() const;   //获得数据库信息
     void closeDB(); //关闭数据库
     void openDB();
-
+    QSqlDatabase * db;    //数据库类
 protected:
 private:
-
-    QSqlDatabase * db;    //数据库类
     QString HostName;   //数据库地址
     QString UserName;   //用户名
     QString Password;   //密码

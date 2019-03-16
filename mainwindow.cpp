@@ -54,6 +54,7 @@ void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
 
 void MainWindow::userLogin()    //登陆槽函数
 {
+
     db->openDB();
     bool ret = false;
     ret = db->query->prepare("SELECT * FROM `user` WHERE `user`.user_name = :name AND `user`.user_passwd = :passwd");
@@ -63,11 +64,16 @@ void MainWindow::userLogin()    //登陆槽函数
     if(!ret)
     {
         QMessageBox::critical(this,"错误",QString(db->query->lastError().text()));
+        db->closeDB();
+        return;
     }
     else if(!(db->query->next()))
     {
         QMessageBox::critical(this,"错误","账号或密码错误");
-    }else
+        db->closeDB();
+        return;
+    }
+    else
     {
         int type = db->query->value("user_type").toInt();
         if(0==type)
@@ -85,8 +91,8 @@ void MainWindow::userLogin()    //登陆槽函数
             QMessageBox::information(this,"login","社团登录成功");
             //code
         }
+        db->closeDB();
     }
-    db->closeDB();
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
