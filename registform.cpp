@@ -11,8 +11,10 @@ registForm::registForm(QWidget *parent) :
 
     ui->setupUi(this);
 
+    sltTeacher = NULL;
     this->setWindowTitle("用户注册");   //设置窗口标题
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
+
 
     this->db = new DBconnt();   //初始化数据库类
     this->us = new user();  //初始化用户类
@@ -31,13 +33,13 @@ registForm::registForm(QWidget *parent) :
             [=](int index){if(index == 0)
         {
             this->SetNULLGroupEdit();
-            ui->widget_group->hide();
+            ui->widget_group->close();
             ui->widget_teacher->show();
         }
         if(index == 1)
         {
             this->SetNULLTeacherEdit();
-            ui->widget_teacher->hide();
+            ui->widget_teacher->close();
             ui->widget_group->show();
         }});
     connect(ui->pushButton_cancel,&QPushButton::clicked,[=](){  //取消按钮关闭窗口
@@ -74,6 +76,22 @@ registForm::registForm(QWidget *parent) :
             return;
         }
     });
+    connect(ui->toolButton_select_teacher,&QToolButton::clicked,[=](){
+        sltTeacher = new selectTeacherForm();
+        connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString & ID){  //连接返回教师ID的信号与设置教师ID的槽
+            ui->lineEdit_groupTeacher->setText(ID); //设置教师ID输入栏
+            if(sltTeacher != NULL)
+            {
+                sltTeacher->close();    //关闭教师选择窗口
+            }
+        });
+        sltTeacher->show();
+    });
+//    connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString ID){
+//        qDebug()<<ID;
+//        //ui->lineEdit_groupTeacher->setText(ID);
+//    });
+
 }
 
 registForm::~registForm()
@@ -183,6 +201,7 @@ bool registForm::groupRegistCheck()
         QMessageBox::critical(this,"错误","用户密码不能为空");
         return false;
     }
+    return true;
 }
 void registForm::userRegist()
 {
@@ -263,8 +282,16 @@ void registForm::userRegist()
         bool check =false;
         if (false == check)
         {
-            return;
+            bool check = groupRegistCheck();
         }
     }
 
+}
+void registForm::closeEvent(QCloseEvent *event) //窗口关闭事件
+{
+    if(sltTeacher != NULL)  //如果选择教师窗口存在则一并关闭
+    {
+        sltTeacher->close();
+    }
+        event->accept();
 }

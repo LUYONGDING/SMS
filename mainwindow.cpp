@@ -9,10 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->db = new DBconnt();
-    qDebug() << this->db->getDBinfo();
-
-    regist = new registForm(this);
-
+//    qDebug() << this->db->getDBinfo();
     this->setMouseTracking(true);
 
     this->setWindowTitle("学生社团管理系统");   //设置窗口标题
@@ -37,13 +34,13 @@ MainWindow::~MainWindow()
     if(NULL == this->db)
     {
         delete db;
-        db == NULL;
+        db = NULL;
     }
-    if(NULL == this->regist)
-    {
-        delete regist;
-        regist == NULL;
-    }
+//    if(NULL == this->regist)
+//    {
+//        delete regist;
+//        regist = NULL;
+//    }
     delete ui;
 }
 void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
@@ -111,6 +108,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         {
             //QMessageBox::information(this,"regist","注册");
             //code
+            regist = new registForm(this);
             regist->show();
             return true;
         }

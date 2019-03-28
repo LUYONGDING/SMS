@@ -104,7 +104,6 @@ void DBconnt::closeDB()
     qDebug() << "关闭数据库:" <<this->db->databaseName();
     delete this->query;
     this->db->close();   //关闭数据库
-
 }
 
 void DBconnt::openDB()

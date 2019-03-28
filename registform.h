@@ -10,11 +10,14 @@
 #include <QButtonGroup>
 #include <QRegExp>
 #include <QPainter>
+#include <QToolButton>
+#include <QCloseEvent>
 
 #include "dbconnt.h"
 #include "user.h"
 #include "group.h"
 #include "teacher.h"
+#include "selectteacherform.h"
 
 namespace Ui {
 class registForm;
@@ -33,7 +36,8 @@ public:
     bool teacherRegistCheck(); //注册前检查
     bool groupRegistCheck(); //注册前检查
     void paintEvent(QPaintEvent *event);
-private:
+    void closeEvent(QCloseEvent *event);
+public slots:
 signals:
 private:
     Ui::registForm *ui;
@@ -43,6 +47,9 @@ private:
     QButtonGroup btnGroup;  //用于教师注册的radio按钮组
     QButtonGroup btnGroup2; //用于社团与机构的radio按钮组
     QRegExp rx; //用于检测密码是否符合规则
+
+    selectTeacherForm * sltTeacher;
+
 };
 
 #endif // REGISTFORM_H

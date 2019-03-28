@@ -290,7 +290,7 @@
        <item row="6" column="1">
         <widget class="QLabel" name="label_groupTeacher">
          <property name="text">
-          <string>指导老师：</string>
+          <string>指导老师ID：</string>
          </property>
         </widget>
        </item>

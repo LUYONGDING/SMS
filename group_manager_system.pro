@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     studentdependence.cpp \
     teacher.cpp \
     root.cpp \
-    registform.cpp
+    registform.cpp \
+    selectteacherform.cpp
 
 HEADERS  += mainwindow.h \
     dbconnt.h \
@@ -45,10 +46,12 @@ HEADERS  += mainwindow.h \
     studentdependence.h \
     teacher.h \
     root.h \
-    registform.h
+    registform.h \
+    selectteacherform.h
 
 FORMS    += mainwindow.ui \
-    registform.ui
+    registform.ui \
+    selectteacherform.ui
 
 RESOURCES += \
     res.qrc
