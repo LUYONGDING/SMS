@@ -36,7 +36,7 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     this->teacherModel->setHeaderData(1,Qt::Horizontal, "教师姓名");
     this->teacherModel->setHeaderData(2,Qt::Horizontal,"教师性别（1为男性，0为女性）");
     ui->tableView->setModel(this->teacherModel); //将教师Model设置到tableView
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
     ui->tableView->show(); //显示
     this->db->closeDB();
     //    connect(ui->tableView,SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(slotRowDoubleClicked(const QModelIndex &)));
@@ -187,6 +187,7 @@ void selectTeacherForm::resetTable()
     this->teacherModel->setQuery("SELECT * FROM TEACHER");  //设置sql语句
     this->teacherModel->removeColumn(1);
     ui->tableView->setModel(this->teacherModel); //将教师Model设置到tableView
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->show(); //显示
     this->db->closeDB();
 }

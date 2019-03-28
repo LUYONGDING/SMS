@@ -44,6 +44,7 @@ private:
     DBconnt * db;   //数据库类
     user * us;  //用户类
     teacher * tch;  //教师类
+    group * grp;
     QButtonGroup btnGroup;  //用于教师注册的radio按钮组
     QButtonGroup btnGroup2; //用于社团与机构的radio按钮组
     QRegExp rx; //用于检测密码是否符合规则

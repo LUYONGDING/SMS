@@ -19,6 +19,7 @@ registForm::registForm(QWidget *parent) :
     this->db = new DBconnt();   //初始化数据库类
     this->us = new user();  //初始化用户类
     this->tch = new teacher();  //初始化教师类
+    this->grp = new group();
     this->rx.setPattern(QString("^[A-Za-z0-9]+$")); //设置密码格式为数字与大小写字母
     //加入教师按钮组
     this->btnGroup.addButton(ui->radioButton_male,1);
@@ -87,10 +88,10 @@ registForm::registForm(QWidget *parent) :
         });
         sltTeacher->show();
     });
-//    connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString ID){
-//        qDebug()<<ID;
-//        //ui->lineEdit_groupTeacher->setText(ID);
-//    });
+    //    connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString ID){
+    //        qDebug()<<ID;
+    //        //ui->lineEdit_groupTeacher->setText(ID);
+    //    });
 
 }
 
@@ -215,7 +216,7 @@ void registForm::userRegist()
         //获取值
         this->us->setUserName(ui->lineEdit_teacher_userName->text());
         this->us->setUserPasswd(ui->lineEdit_teacher_userPasswd->text());
-        this->us->setUserType(1);
+        this->us->setUserType(1);   //1代表教师
 
         this->tch->setTeacherName(ui->lineEdit_teacherName->text());
         this->tch->setTeacherSex(btnGroup.checkedId());
@@ -249,7 +250,7 @@ void registForm::userRegist()
                 this->tch->setTeahcerUserID(us);    //设置teacher类中的用户ID
                 //插入用户类
                 ret = false;
-                this->db->query->prepare("insert into teacher (teacher_user_id,teacher_name,teacher_sex) values(:userID,:name,:sex)");
+                this->db->query->prepare("insert into teacher (teacher_user_id,teacher_name,teacher_sex) values (:userID,:name,:sex)");
                 this->db->query->bindValue(":userID",tch->getTeacherUserID());
                 this->db->query->bindValue(":name",tch->getTeacherName());
                 this->db->query->bindValue(":sex",tch->getTeacherSex());
@@ -274,18 +275,113 @@ void registForm::userRegist()
             }
         }
         this->db->db->commit();
-        QMessageBox::critical(this,"注册成功",QString("注册成功！请牢记您的个人信息：%1").arg(this->us->getinfo()));
+        QMessageBox::information(this,"注册成功",QString("注册成功！请牢记您的个人信息：%1").arg(this->us->getinfo()));
+        this->SetNULLTeacherEdit();
         this->db->closeDB();
     }
     if(ui->comboBox->currentText()=="社团")
     {
-        bool check =false;
-        if (false == check)
+        bool check =groupRegistCheck();
+        if(!check)
         {
-            bool check = groupRegistCheck();
+            return;
         }
-    }
+        //获取值
+        this->us->setUserName(ui->lineEdit_group_userName->text());
+        this->us->setUserPasswd(ui->lineEdit_group_user_passwd->text());
+        this->us->setUserType(2);
 
+        this->grp->setGroupName(ui->lineEdit_groupName->text());
+        this->grp->setGroupType(btnGroup2.checkedId());
+        //从教师表中查询是否存在该教师
+        bool ret = 0;
+        this->db->openDB();
+        this->db->db->transaction();
+        this->db->query->prepare("SELECT * FROM TEACHER where teacher_id = :value");
+        this->db->query->bindValue(":value",ui->lineEdit_groupTeacher->text().toInt());
+        ret = this->db->query->exec();
+        if(!ret)    //如果执行不成功则事务回滚
+        {
+            QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+            this->db->db->rollback();
+            this->db->closeDB();
+            return;
+        }
+        else
+        {
+            if(this->db->query->next()) //如果存在该行数据
+            {
+                this->tch->setTeacherID(this->db->query->value("teacher_id").toInt()); //设置教师ID
+                this->grp->setGroupTeacherID(this->tch);    //设置社团指导老师
+                //                qDebug()<<this->grp->getinfo();
+                //为社团注册一个用户插入用户表
+                this->db->query->prepare("insert into user (user_name,user_passwd,user_type) values(:username,:userpasswd,:usertype)");
+                this->db->query->bindValue(":username",us->getUserName());
+                this->db->query->bindValue(":userpasswd",us->getUserPasswd());
+                this->db->query->bindValue(":usertype",us->getUserType());
+                ret = this->db->query->exec();
+                if(!ret)
+                {
+                    QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+                    this->db->db->rollback();
+                    this->db->closeDB();
+                    return;
+                }
+                else
+                {
+                    //获得用户表中社团用户的用户ID
+                    this->db->query->prepare("SELECT * FROM user WHERE user_name = :value");
+                    this->db->query->bindValue(":value",this->us->getUserName());
+                    ret = this->db->query->exec();
+                    if(!ret)
+                    {
+                        QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+                        this->db->db->rollback();
+                        this->db->closeDB();
+                        return;
+                    }
+                    else
+                    {
+                        if(this->db->query->next())    //如果存在数据
+                        {
+                            this->us->setUserID(this->db->query->value("user_id").toInt()); //设置用户ID
+                            //将社团插入社团表
+                            this->grp->setGroupID(this->us);
+                            qDebug()<<this->grp->getinfo();
+                            this->db->query->prepare("INSERT INTO `group_manager_system`.`group` (`group_user_id`, `group_name`, `group_teacher_id`, `group_type`) VALUES (:userID, :name, :teacherID, :type);");
+                            this->db->query->bindValue(":userID",this->grp->getGroupID());
+                            this->db->query->bindValue(":name",this->grp->getGroupName());
+                            this->db->query->bindValue(":teacherID",this->grp->getGroupTeacherID());
+                            this->db->query->bindValue(":type",this->grp->getGroupType());
+                            ret = this->db->query->exec();
+                            if(!ret)
+                            {
+                                QMessageBox::critical(this,"系统错误",this->db->query->lastError().text());
+                                this->db->db->rollback();
+                                this->db->closeDB();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            QMessageBox::critical(this,"系统错误","获取userID失败");
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                QMessageBox::warning(this,"注册失败",QString("不存在ID为%1的教师").arg(ui->lineEdit_groupTeacher->text().toInt()));
+                this->db->closeDB();
+                return;
+            }
+        }
+        this->db->db->commit();
+        QMessageBox::information(this,"注册成功",QString("注册成功，请牢记您的个人信息!用户ID：%1,用户名：%2,用户密码：%3").arg(us->getUserID()).arg(us->getUserName()).arg(us->getUserPasswd()));
+        this->SetNULLGroupEdit();
+        this->db->closeDB();
+    }
 }
 void registForm::closeEvent(QCloseEvent *event) //窗口关闭事件
 {
@@ -293,5 +389,5 @@ void registForm::closeEvent(QCloseEvent *event) //窗口关闭事件
     {
         sltTeacher->close();
     }
-        event->accept();
+    event->accept();
 }
