@@ -17,8 +17,10 @@ public:
 
     //设置和获得成员属性接口
     void setGroupID(user * user);
+    void setGroupID(int ID);
     void setGroupName(QString groupName);
     void setGroupTeacherID(teacher * thr);
+    void setGroupTeacherID(int ID);
     void setGroupType(int groupType);
 
     int getGroupID() const;

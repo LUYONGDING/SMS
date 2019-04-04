@@ -18,6 +18,7 @@ public:
     //设置和获得成员属性的接口
     void setDepartmentID(int departmentID);
     void setDepartmentGroupID(const group * gp);
+    void setDepartmentGroupID(int ID);
     void setDepartmentName(QString departmentName);
     void setDepartmentIntroduction(QString departmentIntroduction);
 

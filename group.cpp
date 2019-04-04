@@ -32,6 +32,10 @@ void group::setGroupID(user * user)
     }
     this->groupID = user->getUserID();
 }
+void group::setGroupID(int ID)
+{
+    this->groupID = ID;
+}
 void group::setGroupName(QString groupName)
 {
     this->groupName = groupName;
@@ -39,6 +43,10 @@ void group::setGroupName(QString groupName)
 void group::setGroupTeacherID(teacher * thr)
 {
     this->groupTeacherID = thr->getTeacherID();
+}
+void group::setGroupTeacherID(int ID)
+{
+    this->groupTeacherID = ID;
 }
 void group::setGroupType(int groupType)
 {

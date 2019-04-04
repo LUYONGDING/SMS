@@ -35,6 +35,10 @@ void teacher::setTeahcerUserID(user * us)
     }
     this->teacherUserID = us->getUserID();
 }
+void  teacher::setTeahcerUserID(int ID)
+{
+    this->teacherID = ID;
+}
 void teacher::setTeacherName(QString teacherName)
 {
     this->teacherName = teacherName;

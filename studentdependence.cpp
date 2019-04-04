@@ -31,6 +31,10 @@ void studentDependence::setDependenceGroupID(group * gp)
     }
     this->dependenceGroupID = gp->getGroupID();
 }
+void studentDependence::setDependenceGroupID(int ID)
+{
+    this->dependenceGroupID = ID;
+}
 void studentDependence::setDependenceDepartmentID(department * dp)
 {
     if(NULL == dp)
@@ -39,6 +43,10 @@ void studentDependence::setDependenceDepartmentID(department * dp)
         return;
     }
     this->dependenceDepartmentID = dp->getDepartmentID();
+}
+void studentDependence::setDependenceDepartmentID(int ID)
+{
+    this->dependenceDepartmentID = ID;
 }
 void studentDependence::setDependenceDuty(QString dependenceDuty)
 {

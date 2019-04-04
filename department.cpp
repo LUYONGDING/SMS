@@ -32,6 +32,10 @@ void department::setDepartmentGroupID(const group * gp)
     }
     this->departmentGroupID = gp->getGroupID();
 }
+void department::setDepartmentGroupID(int ID)
+{
+    this->departmentGroupID = ID;
+}
 void department::setDepartmentName(QString departmentName)
 {
     this->departmentName = departmentName;

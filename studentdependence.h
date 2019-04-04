@@ -19,7 +19,9 @@ public:
 
     //设置和获得成员的接口
     void setDependenceGroupID(group * gp);
+    void setDependenceGroupID(int ID);
     void setDependenceDepartmentID(department * dp);
+    void setDependenceDepartmentID(int ID);
     void setDependenceDuty(QString dependenceDuty);
     void setDependenceID(int dependenceID);
     void setDependenceStudentID(student * stu);

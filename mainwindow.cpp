@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    qDebug() << this->db->getDBinfo();
     this->setMouseTracking(true);
 
+    this->us = new user();
+
     this->setWindowTitle("学生社团管理系统");   //设置窗口标题
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
 
@@ -24,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    connect(this->regist,&registForm::destroyed,[=](){
 //        this->show();
 //    });
+    this->timer = new QTimer(this);
 
 }
 
@@ -70,18 +73,30 @@ void MainWindow::userLogin()    //登陆槽函数
     }
     else
     {
-        int type = db->query->value("user_type").toInt();
-        if(0==type)
+        this->us->setUserType(db->query->value("user_type").toInt());
+        this->us->setUserID(db->query->value("user_id").toInt());
+        this->us->setUserName(db->query->value("user_name").toString());
+        if(0==us->getUserType())
         {
             QMessageBox::information(this,"login","管理员登录成功");
             //code
         }
-        if(1==type)
+        if(1==us->getUserType())
         {
             QMessageBox::information(this,"login","教师登录成功");
+
+            TeacherMainWindow * tchmain = new TeacherMainWindow();
+            connect(this,&MainWindow::sendUserInfo,tchmain,&TeacherMainWindow::getUserInfo);
+            connect(this->timer,&QTimer::timeout,[=](){
+                tchmain->show();
+                emit sendUserInfo(this->us);
+                this->timer->stop();
+            });
+            this->timer->start(1000);
+            this->hide();
             //code
         }
-        if(2==type)
+        if(2==us->getUserType())
         {
             QMessageBox::information(this,"login","社团登录成功");
             //code

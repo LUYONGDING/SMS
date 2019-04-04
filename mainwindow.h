@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QTimer>
 
 
 #include "dbconnt.h"
@@ -20,6 +21,7 @@
 #include "teacher.h"
 #include "root.h"
 #include "registform.h"
+#include "teachermainwindow.h"
 
 using namespace std;
 
@@ -36,6 +38,8 @@ public:
     ~MainWindow();
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
+signals:
+    void sendUserInfo(user * us);
 private slots:
     void userLogin();   //登录槽函数
 private:
@@ -45,6 +49,9 @@ private:
 
     registForm * regist;
 
+    user * us;
+
+    QTimer * timer;
 };
 
 #endif // MAINWINDOW_H

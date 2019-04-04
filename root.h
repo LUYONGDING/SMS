@@ -21,6 +21,7 @@ public:
     //设置和获得成员属性的接口
     void setRootID(int rootID);
     void setUserID(user * us);
+    void setUserID(int ID);
     void setRootName(QString rootName);
     void setRootSex(bool rootSex);
 

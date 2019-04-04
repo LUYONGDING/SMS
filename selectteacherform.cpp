@@ -52,6 +52,10 @@ selectTeacherForm::~selectTeacherForm()
     {
         delete this->db;
     }
+    if(this->tch != NULL)
+    {
+        delete this->tch;
+    }
     delete ui;
 }
 void selectTeacherForm::paintEvent(QPaintEvent *event)

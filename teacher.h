@@ -21,6 +21,7 @@ public:
     //设置和获得成员属性的接口
     void setTeacherID(int teacherID);
     void setTeahcerUserID(user * us);
+    void setTeahcerUserID(int ID);
     void setTeacherName(QString teacherName);
     void setTeacherSex(bool teacherSex);
 
