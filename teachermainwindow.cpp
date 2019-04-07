@@ -11,12 +11,17 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
     this->tch = new teacher();
     this->grp = new group();
     this->dpment = new department();
+    this->mainTableView = new QSqlQueryModel(this);
 
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
     QWidget * tempWidget = new QWidget(this);
     ui->dockWidget_left->setTitleBarWidget(tempWidget);
+    ui->widget->hide();
     this->setMarginSpacing();
     ui->treeView_2->setContextMenuPolicy(Qt::CustomContextMenu);
+//    this->actionopenGrpTableView = new QAction("打开",this->ui->treeView_2);
+//    this->actionopendpmentTableView = new QAction("打开",this->ui->treeView_2);
+//    this->actionopendpmentTableViewByGrp = new QAction("打开该部门所在的社团",this->ui->treeView_2);
 }
 
 TeacherMainWindow::~TeacherMainWindow()
@@ -68,7 +73,7 @@ void TeacherMainWindow::getUserInfo(user * us){ //获得登陆用户的槽函数
 void TeacherMainWindow::setGroupModel()
 {
     bool ret = 0;
-    QStandardItemModel * model = new QStandardItemModel(ui->treeView_2);
+    this->model = new QStandardItemModel(ui->treeView_2);
     ui->treeView_2->setEditTriggers(0);
     ui->treeView_2->header()->hide();
     QStandardItem * item = new QStandardItem("我管理的社团");
@@ -146,7 +151,7 @@ void TeacherMainWindow::setGroupModel()
                     this->dpment->setDepartmentGroupID(query.value("department_group_id").toInt());
                     this->dpment->setDepartmentName(query.value("department_name").toString());
                     this->dpment->setDepartmentIntroduction(query.value("department_introdution").toString());
-                    QStandardItem * group_dpment = new QStandardItem(this->dpment->getDepartmentName());
+                    QStandardItem * group_dpment = new QStandardItem(QString("%1-[%2]").arg(this->dpment->getDepartmentName()).arg("部门"));
                     my_group->appendRow(group_dpment);
                     this->dpment->getInfo();
                 }
@@ -165,10 +170,181 @@ void TeacherMainWindow::setGroupModel()
 //    model->appendRow(item);
 //    ui->treeView_2->setModel(model);
 }
-void TeacherMainWindow::CustomContextMenu(const QPoint &)
+void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
 {
-    QMenu * tree_menu = new QMenu(this);
-    tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
-    tree_menu->exec(QCursor::pos());
 
+
+    QModelIndex index = ui->treeView_2->indexAt(pos);
+    QMenu * tree_menu = new QMenu(this);
+    QStandardItem * tmpItem = model->itemFromIndex(index);
+    if(index.isValid())
+    {
+//        qDebug()<<index.row()<<","<<index.column()<<"->"<<tmpItem->text();
+//        qDebug()<<tmpItem->text();
+        if(tmpItem->text() == "我管理的社团")
+        {
+             tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+        }
+        else
+        {
+            QStringList list = tmpItem->text().split("-");
+//            qDebug()<<list[0];
+//            qDebug()<<list[1];
+            if(list[1] == "[学生机构]" || list[1] == "[学生社团]")
+            {
+//                QAction * openGrp = new QAction("打开",this);
+
+//                tree_menu->addAction(openGrp);
+//                connect(openGrp,&QAction::triggered,[=](){
+//                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView);
+//                    emit sendOpenInfo(list);
+//                });
+                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
+                tree_menu->addAction("打开",this,[=](){
+                    emit sendOpenInfo(list);
+                });
+            }
+            else
+            {
+                connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
+                tree_menu->addAction("打开",this,[=](){
+                    emit sendOpenInfo2(list);
+                });
+//                tree_menu->addAction("打开部门所在的社团",[=](){
+//                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::opendpmentTableViewByGrp);
+//                    emit sendOpenInfo(list);
+//                });
+//                tree_menu->addAction("刷新",this->ui->treeView_2,&TeacherMainWindow::setGroupModel);
+            }
+            tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+            list.clear();
+        }
+    }
+    else
+    {
+        tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+    }
+    tree_menu->exec(QCursor::pos());
 }
+void TeacherMainWindow::openGrpTableView(QStringList list)
+{
+    ui->widget->show();
+    this->grp->setGroupName(list[0]);
+    if(list[1] == "[学生机构]")
+    {
+        this->grp->setGroupType(0);
+    }
+    else
+    {
+        this->grp->setGroupType(1);
+    }
+    bool ret = false;
+    this->db->openDB();
+    this->db->query->prepare("SELECT * FROM `group` WHERE `group_name` = :NAME");
+    this->db->query->bindValue(":NAME",this->grp->getGroupName());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->grp->setGroupID(this->db->query->value("group_user_id").toInt());
+        this->grp->setGroupTeacherID(this->db->query->value("group_teacher_id").toInt());
+    }
+    else
+    {
+        QMessageBox::critical(NULL,"错误",QString("查询无结果@").arg(this->db->query->lastQuery()));
+        this->db->closeDB();
+        return;
+    }
+    this->db->query->prepare("SELECT * FROM `department` WHERE `department_group_id` = :ID");
+    this->db->query->bindValue(":ID",this->grp->getGroupID());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->mainTableView->setQuery(*(this->db->query));
+        this->mainTableView->removeColumn(0);
+        this->mainTableView->removeColumn(1);
+        this->mainTableView->setHeaderData(0,Qt::Horizontal,"部门名称");
+        this->mainTableView->setHeaderData(1,Qt::Horizontal,"部门简介");
+        ui->tableView->setModel(this->mainTableView);
+        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+        ui->tableView->show();
+    }
+    else
+    {
+        QMessageBox::information(NULL,"信息","没有部门");
+        this->db->closeDB();
+        return;
+    }
+    this->db->closeDB();
+    return;
+}
+void TeacherMainWindow::opendpmentTableView(QStringList list)
+{
+    this->dpment->setDepartmentName(list[0]);   //获取社团名
+    int ret = false;
+    this->db->openDB();
+    this->db->query->prepare("SELECT * FROM `department` WHERE `department_name` = :NAME");
+    this->db->query->bindValue(":NAME",this->dpment->getDepartmentName());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->dpment->setDepartmentID(this->db->query->value("department_id").toInt());
+        this->dpment->setDepartmentGroupID(this->db->query->value("department_group_id").toInt());
+        this->dpment->setDepartmentIntroduction(this->db->query->value("department_introdution").toString());
+    }
+    else
+    {
+        QMessageBox::critical(NULL,"错误",QString("查询无结果@").arg(this->db->query->lastQuery()));
+        this->db->closeDB();
+        return;
+    }
+    this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = :ID)");
+    this->db->query->bindValue(":ID",this->dpment->getDepartmentID());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->mainTableView->setQuery(*(this->db->query));
+        this->mainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
+        this->mainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
+        this->mainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
+        ui->tableView->setModel(this->mainTableView);
+        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+        ui->tableView->show();
+    }
+    else
+    {
+        QMessageBox::information(NULL,"信息","没有成员");
+        this->db->closeDB();
+        return;
+    }
+    this->db->closeDB();
+    return;
+}
+//void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
+//{
+//    qDebug()<<list[0];
+//    qDebug()<<list[1];
+//}
