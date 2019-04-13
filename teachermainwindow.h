@@ -16,7 +16,6 @@
 #include "group.h"
 #include "user.h"
 #include "department.h"
-#include "mainwindow.h"
 #include "studentdependence.h"
 #include "student.h"
 
@@ -48,12 +47,14 @@ private:
 signals:
     void sendOpenInfo(QStringList list);
     void sendOpenInfo2(QStringList list);
+    void loginOut();
 public slots:
     void getUserInfo(user * us);
     void CustomContextMenu(const QPoint &);
     void setGroupModel();
     void openGrpTableView(QStringList list);
     void opendpmentTableView(QStringList list);
+    void openTableViewByDC(const QModelIndex &);
 };
 
 #endif // TEACHERMAINWINDOW_H

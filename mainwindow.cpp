@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //        this->show();
 //    });
     this->timer = new QTimer(this);
-
 }
 
 MainWindow::~MainWindow()
@@ -75,6 +74,7 @@ void MainWindow::userLogin()    //登陆槽函数
     {
         this->us->setUserType(db->query->value("user_type").toInt());
         this->us->setUserID(db->query->value("user_id").toInt());
+        this->us->setUserPasswd(db->query->value("user_passwd").toString());
         this->us->setUserName(db->query->value("user_name").toString());
         if(0==us->getUserType())
         {
@@ -85,7 +85,12 @@ void MainWindow::userLogin()    //登陆槽函数
         {
             QMessageBox::information(this,"login","教师登录成功");
 
-            TeacherMainWindow * tchmain = new TeacherMainWindow();
+            this->tchmain = new TeacherMainWindow();
+            connect(tchmain,&TeacherMainWindow::loginOut,this,&MainWindow::show);
+            if(!this->tchmain->isWindow())
+            {
+                delete this->tchmain;
+            }
             connect(this,&MainWindow::sendUserInfo,tchmain,&TeacherMainWindow::getUserInfo);
             connect(this->timer,&QTimer::timeout,[=](){
                 tchmain->show();
@@ -99,6 +104,19 @@ void MainWindow::userLogin()    //登陆槽函数
         if(2==us->getUserType())
         {
             QMessageBox::information(this,"login","社团登录成功");
+            this->grpmain = new GroupMainWindow();
+            if(!this->grpmain->isWindow())
+            {
+                delete this->tchmain;
+            }
+            connect(this,&MainWindow::sendUserInfo,grpmain,&GroupMainWindow::getUserInfo);
+            connect(this->timer,&QTimer::timeout,[=](){
+                grpmain->show();
+                emit sendUserInfo(us);
+                this->timer->stop();
+            });
+            this->timer->start(1000);
+            this->hide();
             //code
         }
         db->closeDB();

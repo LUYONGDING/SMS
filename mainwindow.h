@@ -22,6 +22,7 @@
 #include "root.h"
 #include "registform.h"
 #include "teachermainwindow.h"
+#include "groupmainwindow.h"
 
 using namespace std;
 
@@ -52,6 +53,10 @@ private:
     user * us;
 
     QTimer * timer;
+
+    TeacherMainWindow * tchmain;
+
+    GroupMainWindow * grpmain;
 };
 
 #endif // MAINWINDOW_H

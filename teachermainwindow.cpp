@@ -22,6 +22,24 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
 //    this->actionopenGrpTableView = new QAction("打开",this->ui->treeView_2);
 //    this->actionopendpmentTableView = new QAction("打开",this->ui->treeView_2);
 //    this->actionopendpmentTableViewByGrp = new QAction("打开该部门所在的社团",this->ui->treeView_2);
+    connect(ui->treeView_2,&QTreeView::doubleClicked,this,&TeacherMainWindow::openTableViewByDC);
+    connect(ui->actionabout,&QAction::triggered,[=](){
+        QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
+        QMessageBox::about(this,"关于",about);
+    });
+    connect(ui->actionloginout,&QAction::triggered,[=](){
+        int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
+        if(lgnout==QMessageBox::Yes)
+        {
+            qDebug()<<"用户登出";
+            emit loginOut();
+            this->close();
+        }
+        else
+        {
+            return;
+        }
+    });
 }
 
 TeacherMainWindow::~TeacherMainWindow()
@@ -55,7 +73,7 @@ void TeacherMainWindow::setMarginSpacing()
     this->ui->dockWidget_left->layout()->setMargin(0);
     this->ui->dockWidget_left->layout()->setSpacing(0);
     this->ui->widget->layout()->setSpacing(0);
-    this->ui->widget->layout()->setMargin(0);
+    this->ui->widget->layout()->setMargin(1);
 }
 void TeacherMainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
 {
@@ -68,6 +86,10 @@ void TeacherMainWindow::getUserInfo(user * us){ //获得登陆用户的槽函数
     this->setWindowTitle(QString("%1 [教师] - 学生社团管理系统").arg(this->us->getUserName()));   //设置窗口标题
     setGroupModel();
     connect(ui->treeView_2,&QTreeView::customContextMenuRequested,this,&TeacherMainWindow::CustomContextMenu);
+    connect(ui->actionuserInfo,&QAction::triggered,[=](){
+        QString userinfo = QString("用户名：%1\n用户类型：教师").arg(this->us->getUserName());
+        QMessageBox::about(this,"用户信息",userinfo);
+    });
     return;
 }
 void TeacherMainWindow::setGroupModel()
@@ -199,17 +221,18 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
 //                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView);
 //                    emit sendOpenInfo(list);
 //                });
-                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
+
                 tree_menu->addAction("打开",this,[=](){
                     emit sendOpenInfo(list);
                 });
+                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
             }
             else
             {
-                connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
                 tree_menu->addAction("打开",this,[=](){
                     emit sendOpenInfo2(list);
                 });
+                connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
 //                tree_menu->addAction("打开部门所在的社团",[=](){
 //                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::opendpmentTableViewByGrp);
 //                    emit sendOpenInfo(list);
@@ -342,6 +365,24 @@ void TeacherMainWindow::opendpmentTableView(QStringList list)
     }
     this->db->closeDB();
     return;
+}
+
+void TeacherMainWindow::openTableViewByDC(const QModelIndex & index)
+{
+    QStandardItem * item = model->itemFromIndex(index);
+    QString str = item->text();
+    if(str == "我管理的社团")
+        return;
+    QStringList list = str.split("-");
+//    qDebug()<<list[0]<<","<<list[1];
+    if(list[1]=="[学生机构]" || list[1] == "[学生社团]")
+    {
+        openGrpTableView(list);
+    }
+    else if(list[1]=="[部门]")
+    {
+        opendpmentTableView(list);
+    }
 }
 //void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
 //{

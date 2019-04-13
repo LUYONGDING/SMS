@@ -32,7 +32,7 @@ public:
 signals:
     void selectedID(QString & ID);
 public slots:
-    void slotRowDoubleClicked(const QModelIndex &);
+    void slotRowDoubleClicked(const QModelIndex & index);
 private slots:
     void searchTeacher();
     void returnTeacherID();
