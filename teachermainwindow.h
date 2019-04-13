@@ -47,6 +47,7 @@ private:
 signals:
     void sendOpenInfo(QStringList list);
     void sendOpenInfo2(QStringList list);
+    void sendOpenInfo3(QStringList list);
     void loginOut();
 public slots:
     void getUserInfo(user * us);
@@ -55,6 +56,7 @@ public slots:
     void openGrpTableView(QStringList list);
     void opendpmentTableView(QStringList list);
     void openTableViewByDC(const QModelIndex &);
+    void opendpmentTableViewByGrp(QStringList list);
 };
 
 #endif // TEACHERMAINWINDOW_H

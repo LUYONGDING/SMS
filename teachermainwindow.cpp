@@ -222,22 +222,40 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
 //                    emit sendOpenInfo(list);
 //                });
 
-                tree_menu->addAction("打开",this,[=](){
+//                tree_menu->addAction("打开",[=](){
+//                    emit sendOpenInfo(list);
+//                });
+//                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
+                QAction * openGrp = new QAction(this);
+                openGrp->setText("打开");
+                tree_menu->addAction(openGrp);
+                connect(openGrp,&QAction::triggered,[=](){
+                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
                     emit sendOpenInfo(list);
                 });
-                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
             }
             else
             {
-                tree_menu->addAction("打开",this,[=](){
+                QAction * openDpment = new QAction(this);
+                openDpment->setText("打开");
+                tree_menu->addAction(openDpment);
+                connect(openDpment,&QAction::triggered,[=](){
+                    connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
                     emit sendOpenInfo2(list);
                 });
-                connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
 //                tree_menu->addAction("打开部门所在的社团",[=](){
-//                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::opendpmentTableViewByGrp);
-//                    emit sendOpenInfo(list);
+
+//                    emit sendOpenInfo3(list);
 //                });
+//                connect(this,&TeacherMainWindow::sendOpenInfo3,this,&TeacherMainWindow::opendpmentTableViewByGrp,Qt::UniqueConnection);
 //                tree_menu->addAction("刷新",this->ui->treeView_2,&TeacherMainWindow::setGroupModel);
+                QAction * openGrpByDpment = new QAction(this);
+                openGrpByDpment->setText("打开部门所在的社团");
+                tree_menu->addAction(openGrpByDpment);
+                connect(openGrpByDpment,&QAction::triggered,[=](){
+                    connect(this,&TeacherMainWindow::sendOpenInfo3,this,&TeacherMainWindow::opendpmentTableViewByGrp,Qt::UniqueConnection);
+                    emit sendOpenInfo3(list);
+                });
             }
             tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
             list.clear();
@@ -314,6 +332,7 @@ void TeacherMainWindow::openGrpTableView(QStringList list)
 }
 void TeacherMainWindow::opendpmentTableView(QStringList list)
 {
+    ui->widget->show();
     this->dpment->setDepartmentName(list[0]);   //获取社团名
     int ret = false;
     this->db->openDB();
@@ -384,8 +403,40 @@ void TeacherMainWindow::openTableViewByDC(const QModelIndex & index)
         opendpmentTableView(list);
     }
 }
-//void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
-//{
-//    qDebug()<<list[0];
-//    qDebug()<<list[1];
-//}
+void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
+{
+    ui->widget->show();
+    bool ret = false;
+    this->dpment->setDepartmentName(list[0]);
+    this->db->openDB();
+    this->db->query->prepare("SELECT * FROM `group` WHERE `group_user_id` IN (SELECT `department_group_id` FROM `department` WHERE `department_name` = :NAME)");
+    this->db->query->bindValue(":NAME",this->dpment->getDepartmentName());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        QStringList list;
+        list<<this->db->query->value("group_name").toString();
+        int type = this->db->query->value("group_type").toInt();
+        if(type == 0)
+        {
+            list<<"[学生机构]";
+        }
+        else if(type == 1)
+        {
+            list<<"[学生社团]";
+        }
+        openGrpTableView(list);
+    }
+    else
+    {
+        QMessageBox::critical(NULL,"错误","数据库无法查询到该信息");
+        this->db->closeDB();
+        return;
+    }
+}

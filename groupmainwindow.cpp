@@ -47,14 +47,22 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)
     QStandardItem * tmpItem = model->itemFromIndex(index);
     if(index.isValid())
     {
-        tree_menu->addAction("刷新",this,&(this->setGroupModel));
+
+        tree_menu->addAction("刷新",this,&GroupMainWindow::setGroupModel);
         QStringList list = tmpItem->text().split("-");
         if("[部门]"==list[1])
         {
-            tree_menu->addAction("打开部门",this,[=](){
+            QAction * openDpment = new QAction(this);
+            openDpment->setText("打开");
+//            tree_menu->addAction("打开",this,[=](){
+//                emit sendOpenInfo(list);
+//            });
+//            connect(this,&GroupMainWindow::sendOpenInfo,this,&GroupMainWindow::opendpmentTableView);
+            tree_menu->addAction(openDpment);
+            connect(openDpment,&QAction::triggered,[=](){
+                connect(this,&GroupMainWindow::sendOpenInfo,this,&GroupMainWindow::opendpmentTableView);
                 emit sendOpenInfo(list);
             });
-            connect(this,&GroupMainWindow::sendOpenInfo,this,&GroupMainWindow::opendpmentTableView);
         }
         else
         {
