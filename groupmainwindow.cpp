@@ -45,10 +45,13 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)
     QModelIndex index = ui->treeView->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView);
     QStandardItem * tmpItem = model->itemFromIndex(index);
+    QAction * reflash = new QAction(this);
+    reflash->setText("刷新");
+    connect(reflash,&QAction::triggered,this,&GroupMainWindow::setGroupModel);
     if(index.isValid())
     {
 
-        tree_menu->addAction("刷新",this,&GroupMainWindow::setGroupModel);
+        tree_menu->addAction(reflash);
         QStringList list = tmpItem->text().split("-");
         if("[部门]"==list[1])
         {
@@ -71,7 +74,7 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)
     }
     else
     {
-        tree_menu->addAction("刷新",this,&(this->setGroupModel));
+        tree_menu->addAction(reflash);
     }
     tree_menu->exec(QCursor::pos());
 }

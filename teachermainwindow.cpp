@@ -199,13 +199,16 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
     QModelIndex index = ui->treeView_2->indexAt(pos);
     QMenu * tree_menu = new QMenu(this);
     QStandardItem * tmpItem = model->itemFromIndex(index);
+    QAction * reflash = new QAction(this);
+    reflash->setText("刷新");
+    connect(reflash,&QAction::triggered,this,&TeacherMainWindow::setGroupModel);
     if(index.isValid())
     {
 //        qDebug()<<index.row()<<","<<index.column()<<"->"<<tmpItem->text();
 //        qDebug()<<tmpItem->text();
         if(tmpItem->text() == "我管理的社团")
         {
-             tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+            tree_menu->addAction(reflash);
         }
         else
         {
@@ -257,13 +260,13 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
                     emit sendOpenInfo3(list);
                 });
             }
-            tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+            tree_menu->addAction(reflash);
             list.clear();
         }
     }
     else
     {
-        tree_menu->addAction("刷新",this,&TeacherMainWindow::setGroupModel);
+        tree_menu->addAction(reflash);
     }
     tree_menu->exec(QCursor::pos());
 }

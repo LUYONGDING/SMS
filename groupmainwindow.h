@@ -9,6 +9,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QSqlQueryModel>
+#include <QAction>
 
 #include "group.h"
 #include "department.h"

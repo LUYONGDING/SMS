@@ -43,7 +43,7 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     connect(ui->tableView,&QTableView::doubleClicked,this,&selectTeacherForm::slotRowDoubleClicked);    //连接双击与获取表中数据的槽函数
     connect(ui->pushButton_ok,&QPushButton::clicked,this,&selectTeacherForm::returnTeacherID);  //连接确定按钮与获得表中数据的槽函数
     connect(ui->pushButton_search,&QPushButton::clicked,this,&selectTeacherForm::searchTeacher);
-    connect(ui->pushButton_reset,QPushButton::clicked,this,&selectTeacherForm::resetTable);
+    connect(ui->pushButton_reset,&QPushButton::clicked,this,&selectTeacherForm::resetTable);
 }
 
 selectTeacherForm::~selectTeacherForm()
