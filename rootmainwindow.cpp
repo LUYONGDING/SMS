@@ -43,7 +43,6 @@ void RootMainWindow::setMarginSpacing()
     this->ui->centralwidget->layout()->setSpacing(0);
     this->ui->widget_2->layout()->setMargin(0);
     this->ui->widget_2->layout()->setSpacing(0);
-
 }
 
 void RootMainWindow::paintEvent(QPaintEvent *event)
@@ -99,6 +98,7 @@ void RootMainWindow::setUserModel()
     this->userModel->appendRow(item_1);
     this->userModel->appendRow(item_0);
     this->ui->treeView_user->setModel(this->userModel);
+    connect(ui->treeView_user,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInUserByDC);
 }
 
 void RootMainWindow::setGroupModel()
@@ -176,6 +176,7 @@ void RootMainWindow::setGroupModel()
     this->groupModel->appendRow(item0);
     this->groupModel->appendRow(item1);
     ui->treeView_group->setModel(this->groupModel);
+    connect(ui->treeView_group,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInGrpByDC);
 }
 
 void RootMainWindow::setStuModel()
@@ -187,6 +188,7 @@ void RootMainWindow::setStuModel()
     QStandardItem * item = new QStandardItem("学生表");
     this->stuModel->appendRow(item);
     this->ui->treeView_student->setModel(this->stuModel);
+    connect(ui->treeView_student,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInStuByDC);
 }
 
 void RootMainWindow::setTchModel()
@@ -198,6 +200,7 @@ void RootMainWindow::setTchModel()
     QStandardItem * item = new QStandardItem("教师表");
     this->tchModel->appendRow(item);
     this->ui->treeView_teacher->setModel(this->tchModel);
+    connect(ui->treeView_teacher,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInTchByDC);
 }
 
 void RootMainWindow::getUserInfo(user *us)
@@ -230,18 +233,21 @@ void RootMainWindow::CustomContextMenu_User(const QPoint &pos)
             QAction * openGrp = new QAction(this);
             openGrp->setText("打开社团用户");
             tree_menu->addAction(openGrp);
+            connect(openGrp,&QAction::triggered,this,&RootMainWindow::openGrpTableViewInUser);
         }
         else if(tmpItem->text()=="教师用户")
         {
             QAction * openTch = new QAction(this);
             openTch->setText("打开教师用户");
             tree_menu->addAction(openTch);
+            connect(openTch,&QAction::triggered,this,&RootMainWindow::openTchTableViewInUser);
         }
         else if(tmpItem->text()=="管理员用户")
         {
             QAction * openRt = new QAction(this);
             openRt->setText("打开管理员用户");
             tree_menu->addAction(openRt);
+            connect(openRt,&QAction::triggered,this,&RootMainWindow::openRtTableViewInUser);
         }
     }
     tree_menu->exec(QCursor::pos());
@@ -264,24 +270,34 @@ void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)
             QAction * openAllGrp_1 = new QAction(this);
             openAllGrp_1->setText("打开学生社团");
             tree_menu->addAction(openAllGrp_1);
+            connect(openAllGrp_1,&QAction::triggered,this,&RootMainWindow::openGrp_1TableViewInGrp);
         }
         else if(tmpItem->text()=="学生机构")
         {
             QAction * openAllGrp_0 = new QAction(this);
             openAllGrp_0->setText("打开学生机构");
             tree_menu->addAction(openAllGrp_0);
+            connect(openAllGrp_0,&QAction::triggered,this,&RootMainWindow::openGrp_0TableViewInGrp);
         }
         else if(list[1]=="[学生社团]" || list[1] == "[学生机构]")
         {
             QAction * openGrp = new QAction(this);
             openGrp->setText("打开");
             tree_menu->addAction(openGrp);
+            connect(openGrp,&QAction::triggered,[=](){
+                connect(this,&RootMainWindow::sendOpenInfoList_Grp,this,&RootMainWindow::openGrpTableViewInGrp,Qt::UniqueConnection);
+                emit sendOpenInfoList_Grp(list);
+            });
         }
         else if(list[1] == "[部门]")
         {
             QAction * openDpment = new QAction(this);
             openDpment->setText("打开");
             tree_menu->addAction(openDpment);
+            connect(openDpment,&QAction::triggered,[=](){
+                connect(this,&RootMainWindow::sendOpenInfoList_Dpment,this,&RootMainWindow::openDpmentTableViewInGrp,Qt::UniqueConnection);
+                emit sendOpenInfoList_Dpment(list);
+            });
         }
     }
     tree_menu->exec(QCursor::pos());
@@ -300,6 +316,7 @@ void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)
         QAction * openStu = new QAction(this);
         openStu->setText("打开学生表");
         tree_menu->addAction(openStu);
+        connect(openStu,&QAction::triggered,this,&RootMainWindow::openStuTableViewInStu);
     }
     tree_menu->exec(QCursor::pos());
 }
@@ -317,6 +334,292 @@ void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)
         QAction * openTch = new QAction(this);
         openTch->setText("打开教师表");
         tree_menu->addAction(openTch);
+        connect(openTch,&QAction::triggered,this,&RootMainWindow::openTchTableViewInTch);
     }
     tree_menu->exec(QCursor::pos());
+}
+
+void RootMainWindow::openGrpTableViewInUser()
+{
+    this->ui->widget_2->show();
+    this->db->openDB();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("user");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter(QString("user_type = %1").arg("2"));
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"用户ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"用户名");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"用户密码");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"用户类型");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->show();
+    return;
+}
+
+void RootMainWindow::openTchTableViewInUser()
+{
+    this->ui->widget_2->show();
+    this->db->openDB();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("user");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter("user_type = 1");
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"用户ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"用户名");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"用户密码");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"用户类型");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->show();
+}
+
+void RootMainWindow::openRtTableViewInUser()
+{
+    this->ui->widget_2->show();
+    this->db->openDB();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("user");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter("user_type = 0 AND user_name != 'root'");
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"用户ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"用户名");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"用户密码");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"用户类型");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->show();
+}
+
+void RootMainWindow::openGrpTableViewInGrp(QStringList list)
+{
+    qDebug()<<list[0]<<","<<list[1];
+    this->ui->widget_2->show();
+    this->db->openDB();
+    this->grp->setGroupName(list[0]);
+    if(list[1]=="[学生机构]")
+    {
+        this->grp->setGroupType(0);
+    }
+    else if(list[1] == "[学生社团]")
+    {
+        this->grp->setGroupType(1);
+    }
+    bool ret = false;
+    this->db->query->prepare("SELECT * FROM `group` WHERE `group_name` = :NAME");
+    this->db->query->bindValue(":NAME",this->grp->getGroupName());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->grp->setGroupID(this->db->query->value("group_user_id").toInt());
+        this->grp->setGroupTeacherID(this->db->query->value("group_teacher_id").toInt());
+    }
+    else
+    {
+        QMessageBox::critical(NULL,"错误",QString("查询无结果@").arg(this->db->query->lastQuery()));
+        this->db->closeDB();
+        return;
+    }
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("department");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter(QString("department_group_id = %1").arg(this->grp->getGroupID()));
+    //    this->MainTableView->removeColumn(1);
+    //    this->MainTableView->removeColumn(0);
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"部门ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"社团/机构ID");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"部门名称");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"部门简介");
+    this->MainTableView->select();
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
+}
+
+void RootMainWindow::openDpmentTableViewInGrp(QStringList list)
+{
+    qDebug()<<list[0]<<","<<list[1];
+    this->ui->widget_2->show();
+    this->dpment->setDepartmentName(list[0]);   //获取社团名
+    int ret = false;
+    this->db->openDB();
+    this->db->query->prepare("SELECT * FROM `department` WHERE `department_name` = :NAME");
+    this->db->query->bindValue(":NAME",this->dpment->getDepartmentName());
+    ret = this->db->query->exec();
+    if(!ret)
+    {
+        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+        this->db->closeDB();
+        return;
+    }
+    if(this->db->query->next())
+    {
+        this->dpment->setDepartmentID(this->db->query->value("department_id").toInt());
+        this->dpment->setDepartmentGroupID(this->db->query->value("department_group_id").toInt());
+        this->dpment->setDepartmentIntroduction(this->db->query->value("department_introdution").toString());
+    }
+    else
+    {
+        QMessageBox::critical(NULL,"错误",QString("查询无结果@").arg(this->db->query->lastQuery()));
+        this->db->closeDB();
+        return;
+    }
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("student");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter(QString("`student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = %1)").arg(this->dpment->getDepartmentID()));
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
+}
+
+void RootMainWindow::openGrp_0TableViewInGrp()
+{
+    this->db->openDB();
+    this->ui->widget_2->show();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("`group`");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter(QString("`group_type` = %1").arg("0"));
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"社团ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"社团名称");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"社团指导老师ID");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"社团类别");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->show();
+}
+
+void RootMainWindow::openGrp_1TableViewInGrp()
+{
+    this->db->openDB();
+    this->ui->widget_2->show();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("`group`");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->setFilter("`group_type` = 1");
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"社团ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"社团名称");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"社团指导老师ID");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"社团类别");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
+}
+
+void RootMainWindow::openStuTableViewInStu()
+{
+    this->db->openDB();
+    this->ui->widget_2->show();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("`student`");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
+}
+
+void RootMainWindow::openTchTableViewInTch()
+{
+    this->db->openDB();
+    this->ui->widget_2->show();
+    this->MainTableView = new QSqlTableModel(this);
+    this->MainTableView->setTable("`teacher`");
+    this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    this->MainTableView->select();
+    this->MainTableView->setHeaderData(0,Qt::Horizontal,"教师ID");
+    this->MainTableView->setHeaderData(1,Qt::Horizontal,"教师用户ID");
+    this->MainTableView->setHeaderData(2,Qt::Horizontal,"教师姓名");
+    this->MainTableView->setHeaderData(3,Qt::Horizontal,"教师姓别");
+    ui->tableView->setModel(this->MainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
+}
+
+void RootMainWindow::openTableViewInUserByDC(const QModelIndex &index)
+{
+    QStandardItem * item = this->userModel->itemFromIndex(index);
+    QString str = item->text();
+    if(str == "社团用户")
+    {
+        openGrpTableViewInUser();
+    }
+    else if(str == "教师用户")
+    {
+        openTchTableViewInUser();
+    }
+    else if(str == "管理员用户")
+    {
+        openRtTableViewInUser();
+    }
+    else
+    {
+        return ;
+    }
+}
+
+void RootMainWindow::openTableViewInGrpByDC(const QModelIndex &index)
+{
+    QStandardItem * item = this->groupModel->itemFromIndex(index);
+    QString str = item->text();
+    QStringList list = str.split("-");
+    if(str == "学生机构")
+    {
+        openGrp_0TableViewInGrp();
+    }
+    else if(str == "学生社团")
+    {
+        openGrp_1TableViewInGrp();
+    }
+    else if(list[1]=="[学生社团]" || list[1]=="[学生机构]")
+    {
+        openGrpTableViewInGrp(list);
+    }
+    else if(list[1]=="[部门]")
+    {
+        openDpmentTableViewInGrp(list);
+    }
+    else
+    {
+        return;
+    }
+}
+
+void RootMainWindow::openTableViewInStuByDC(const QModelIndex &index)
+{
+    QStandardItem * item = this->stuModel->itemFromIndex(index);
+    QString str = item->text();
+    if(str == "学生表")
+    {
+        openStuTableViewInStu();
+    }
+}
+
+void RootMainWindow::openTableViewInTchByDC(const QModelIndex &index)
+{
+    QStandardItem * item = this->tchModel->itemFromIndex(index);
+    QString str = item->text();
+    if(str == "教师表")
+    {
+        openTchTableViewInTch();
+    }
 }

@@ -48,18 +48,36 @@ private:
     QStandardItemModel * groupModel;
     QStandardItemModel * stuModel;
     QStandardItemModel * tchModel;
+    QSqlTableModel * MainTableView;
+    QSqlRelationalTableModel * RMainTableView;
     void paintEvent(QPaintEvent *event);
     void setUserModel();
     void setGroupModel();
     void setStuModel();
     void setTchModel();
 signals:
+    void sendOpenInfo(QString info);
+    void sendOpenInfoList_Grp(QStringList list);
+    void sendOpenInfoList_Dpment(QStringList list);
 public slots:
    void getUserInfo(user * us);
    void CustomContextMenu_User(const QPoint &pos);
    void CustomContextMenu_Grp(const QPoint &pos);
    void CustomContextMenu_Stu(const QPoint &pos);
    void CustomContextMenu_Tch(const QPoint &pos);
+   void openGrpTableViewInUser();
+   void openTchTableViewInUser();
+   void openRtTableViewInUser();
+   void openGrpTableViewInGrp(QStringList list);
+   void openDpmentTableViewInGrp(QStringList list);
+   void openGrp_0TableViewInGrp();
+   void openGrp_1TableViewInGrp();
+   void openStuTableViewInStu();
+   void openTchTableViewInTch();
+   void openTableViewInUserByDC(const QModelIndex & index);
+   void openTableViewInGrpByDC(const QModelIndex & index);
+   void openTableViewInStuByDC(const QModelIndex & index);
+   void openTableViewInTchByDC(const QModelIndex & index);
 };
 
 #endif // ROOTMAINWINDOW_H
