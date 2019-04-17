@@ -67,10 +67,10 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)
                 emit sendOpenInfo(list);
             });
         }
-        else
-        {
-            tree_menu->addAction("新增部门");
-        }
+//        else
+//        {
+//            tree_menu->addAction("新增部门");
+//        }
     }
     else
     {
@@ -105,32 +105,48 @@ void GroupMainWindow::opendpmentTableView(QStringList list)
         this->db->closeDB();
         return;
     }
-    this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = :ID)");
-    this->db->query->bindValue(":ID",this->dpment->getDepartmentID());
-    ret = this->db->query->exec();
-    if(!ret)
-    {
-        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
-        this->db->closeDB();
-        return;
-    }
-    if(this->db->query->next())
-    {
-        this->mainTableView->setQuery(*(this->db->query));
-        this->mainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
-        this->mainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
-        this->mainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
-        ui->tableView->setModel(this->mainTableView);
-        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
-        ui->tableView->show();
-    }
-    else
-    {
-        QMessageBox::information(NULL,"信息","没有成员");
-        this->db->closeDB();
-        return;
-    }
-    this->db->closeDB();
+//    this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = :ID)");
+//    this->db->query->bindValue(":ID",this->dpment->getDepartmentID());
+//    ret = this->db->query->exec();
+//    if(!ret)
+//    {
+//        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
+//        this->db->closeDB();
+//        return;
+//    }
+//    if(this->db->query->next())
+//    {
+//        this->mainTableView->setQuery(*(this->db->query));
+//        this->mainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
+//        this->mainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
+//        this->mainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
+//        ui->tableView->setModel(this->mainTableView);
+//        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+//        ui->tableView->show();
+//    }
+//    else
+//    {
+//        QMessageBox::information(NULL,"信息","没有成员");
+//        this->db->closeDB();
+//        return;
+//    }
+//    this->db->closeDB();
+    this->RMainTableView = new QSqlRelationalTableModel(this);
+    this->RMainTableView->setEditStrategy(QSqlTableModel::OnRowChange);
+    this->RMainTableView->setTable("studentdependence");
+    this->RMainTableView->setRelation(3,QSqlRelation("student","student_id","student_name"));
+    this->RMainTableView->setRelation(1,QSqlRelation("department","department_id","department_name"));
+    this->RMainTableView->setFilter(QString("studentdependence_department_id = %1").arg(this->dpment->getDepartmentID()));
+//    this->RMainTableView->removeColumn(2);
+//    this->RMainTableView->removeColumn(0);
+    this->RMainTableView->select();
+    this->RMainTableView->setHeaderData(0,Qt::Horizontal,"社团/机构ID");
+    this->RMainTableView->setHeaderData(1,Qt::Horizontal,"所属部门（修改请输入部门ID）");
+    this->RMainTableView->setHeaderData(2,Qt::Horizontal,"归属ID");
+    this->RMainTableView->setHeaderData(3,Qt::Horizontal,"学生姓名（修改请输入学生ID）");
+    ui->tableView->setModel(this->RMainTableView);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
+    ui->tableView->show();
     return;
 }
 

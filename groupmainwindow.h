@@ -10,6 +10,7 @@
 #include <QStandardItemModel>
 #include <QSqlQueryModel>
 #include <QAction>
+#include <QSqlRelationalTableModel>
 
 #include "group.h"
 #include "department.h"
@@ -39,6 +40,7 @@ private:
     studentDependence * studpence;
     QStandardItemModel * model;
     QSqlQueryModel * mainTableView;
+    QSqlRelationalTableModel * RMainTableView;
     QPainter * painter;
     void setMarginSpacing();
     void setGroupModel();

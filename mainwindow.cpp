@@ -79,6 +79,15 @@ void MainWindow::userLogin()    //登陆槽函数
         if(0==us->getUserType())
         {
             QMessageBox::information(this,"login","管理员登录成功");
+            this->rtmain = new RootMainWindow();
+            connect(this,&MainWindow::sendUserInfo,rtmain,&RootMainWindow::getUserInfo);
+            connect(this->timer,&QTimer::timeout,[=](){
+                rtmain->show();
+                emit sendUserInfo(this->us);
+                this->timer->stop();
+            });
+            this->timer->start(1000);
+            this->hide();
             //code
         }
         if(1==us->getUserType())

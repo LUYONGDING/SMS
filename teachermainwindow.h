@@ -10,6 +10,9 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSqlQueryModel>
+#include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
+#include <QSqlRecord>
 
 #include "dbconnt.h"
 #include "teacher.h"
@@ -43,7 +46,11 @@ private:
     student * stu;
     QStandardItemModel * model;
     QSqlQueryModel * mainTableView;
+    QSqlTableModel * MainTableView;
+    QSqlRelationalTableModel * RMainTableView;
     void setMarginSpacing();
+    void setSearchWidget();
+    QString controlInfo;
 signals:
     void sendOpenInfo(QStringList list);
     void sendOpenInfo2(QStringList list);
@@ -57,6 +64,12 @@ public slots:
     void opendpmentTableView(QStringList list);
     void openTableViewByDC(const QModelIndex &);
     void opendpmentTableViewByGrp(QStringList list);
+private slots:
+    void on_pushButton_add_clicked();
+    void on_pushButton_change_clicked();
+    void on_pushButton_delete_clicked();
+    void on_pushButton_search_clicked();
+    void on_pushButton_reset_clicked();
 };
 
 #endif // TEACHERMAINWINDOW_H
