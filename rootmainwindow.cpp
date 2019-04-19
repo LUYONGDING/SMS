@@ -16,6 +16,13 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     QWidget * tempWidget = new QWidget(this);
     ui->dockWidget_left->setTitleBarWidget(tempWidget);
     this->ui->widget_2->hide();
+    connect(ui->actionabout,&QAction::triggered,[=](){
+        QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
+        QMessageBox::about(this,"关于",about);
+    });
+    connect(ui->actionaboutQt,&QAction::triggered,[=](){
+        QMessageBox::aboutQt(this);
+    });
 }
 
 RootMainWindow::~RootMainWindow()
@@ -96,7 +103,10 @@ void RootMainWindow::setUserModel()
     }
     this->userModel->appendRow(item_2);
     this->userModel->appendRow(item_1);
-    this->userModel->appendRow(item_0);
+    if(this->isRoot)
+    {
+        this->userModel->appendRow(item_0);
+    }
     this->ui->treeView_user->setModel(this->userModel);
     connect(ui->treeView_user,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInUserByDC);
 }
@@ -203,9 +213,53 @@ void RootMainWindow::setTchModel()
     connect(ui->treeView_teacher,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInTchByDC);
 }
 
+void RootMainWindow::setSearchWidget()
+{
+    this->ui->comboBox->clear();
+    if(this->controlInfo == "GrpUser" || this->controlInfo=="TchUser" || this->controlInfo == "rootUser")
+    {
+        this->ui->comboBox->addItem("用户ID");
+        this->ui->comboBox->addItem("用户名");
+    }
+    if(this->controlInfo == "Grp_0Grp" || this->controlInfo == "Grp_1Grp")
+    {
+        this->ui->comboBox->addItem("社团ID");
+        this->ui->comboBox->addItem("社团名称");
+        this->ui->comboBox->addItem("社团指导教师ID");
+    }
+    if(this->controlInfo=="DpmentGrp")
+    {
+        this->ui->comboBox->addItem("部门ID");
+        this->ui->comboBox->addItem("部门名称");
+    }
+    if(this->controlInfo=="StuGrp")
+    {
+        this->ui->comboBox->addItem("学生ID");
+        //       this->ui->comboBox->addItem("学生性别");
+        this->ui->comboBox->addItem("学生姓名");
+    }
+    if(this->controlInfo=="StuStu")
+    {
+        this->ui->comboBox->addItem("学生ID");
+        this->ui->comboBox->addItem("学生性别");
+        this->ui->comboBox->addItem("学生姓名");
+    }
+    if(this->controlInfo=="TchTch")
+    {
+        this->ui->comboBox->addItem("教师ID");
+        this->ui->comboBox->addItem("教师用户ID");
+        this->ui->comboBox->addItem("教师姓名");
+        this->ui->comboBox->addItem("教师性别");
+    }
+}
+
 void RootMainWindow::getUserInfo(user *us)
 {
     this->us = us;
+    if(this->us->getUserName()=="root")
+    {
+        this->isRoot = true;
+    }
     this->setWindowTitle(QString("%1 [管理员] - 学生社团管理系统").arg(this->us->getUserName()));
     setGroupModel();
     setUserModel();
@@ -262,7 +316,7 @@ void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)
     reflash->setText("刷新");
     connect(reflash,&QAction::triggered,this,&RootMainWindow::setGroupModel);
     tree_menu->addAction(reflash);
-    QStringList list = tmpItem->text().split("-");
+
     if(index.isValid())
     {
         if(tmpItem->text()=="学生社团")
@@ -279,25 +333,29 @@ void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)
             tree_menu->addAction(openAllGrp_0);
             connect(openAllGrp_0,&QAction::triggered,this,&RootMainWindow::openGrp_0TableViewInGrp);
         }
-        else if(list[1]=="[学生社团]" || list[1] == "[学生机构]")
+        else
         {
-            QAction * openGrp = new QAction(this);
-            openGrp->setText("打开");
-            tree_menu->addAction(openGrp);
-            connect(openGrp,&QAction::triggered,[=](){
-                connect(this,&RootMainWindow::sendOpenInfoList_Grp,this,&RootMainWindow::openGrpTableViewInGrp,Qt::UniqueConnection);
-                emit sendOpenInfoList_Grp(list);
-            });
-        }
-        else if(list[1] == "[部门]")
-        {
-            QAction * openDpment = new QAction(this);
-            openDpment->setText("打开");
-            tree_menu->addAction(openDpment);
-            connect(openDpment,&QAction::triggered,[=](){
-                connect(this,&RootMainWindow::sendOpenInfoList_Dpment,this,&RootMainWindow::openDpmentTableViewInGrp,Qt::UniqueConnection);
-                emit sendOpenInfoList_Dpment(list);
-            });
+            QStringList list = tmpItem->text().split("-");
+            if(list[1]=="[学生社团]" || list[1] == "[学生机构]")
+            {
+                QAction * openGrp = new QAction(this);
+                openGrp->setText("打开");
+                tree_menu->addAction(openGrp);
+                connect(openGrp,&QAction::triggered,[=](){
+                    connect(this,&RootMainWindow::sendOpenInfoList_Grp,this,&RootMainWindow::openGrpTableViewInGrp,Qt::UniqueConnection);
+                    emit sendOpenInfoList_Grp(list);
+                });
+            }
+            else if(list[1] == "[部门]")
+            {
+                QAction * openDpment = new QAction(this);
+                openDpment->setText("打开");
+                tree_menu->addAction(openDpment);
+                connect(openDpment,&QAction::triggered,[=](){
+                    connect(this,&RootMainWindow::sendOpenInfoList_Dpment,this,&RootMainWindow::openDpmentTableViewInGrp,Qt::UniqueConnection);
+                    emit sendOpenInfoList_Dpment(list);
+                });
+            }
         }
     }
     tree_menu->exec(QCursor::pos());
@@ -341,6 +399,8 @@ void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)
 
 void RootMainWindow::openGrpTableViewInUser()
 {
+    this->controlInfo = "GrpUser";
+    setSearchWidget();
     this->ui->widget_2->show();
     this->db->openDB();
     this->MainTableView = new QSqlTableModel(this);
@@ -360,6 +420,8 @@ void RootMainWindow::openGrpTableViewInUser()
 
 void RootMainWindow::openTchTableViewInUser()
 {
+    this->controlInfo = "TchUser";
+    setSearchWidget();
     this->ui->widget_2->show();
     this->db->openDB();
     this->MainTableView = new QSqlTableModel(this);
@@ -378,6 +440,8 @@ void RootMainWindow::openTchTableViewInUser()
 
 void RootMainWindow::openRtTableViewInUser()
 {
+    this->controlInfo = "rootUser";
+    setSearchWidget();
     this->ui->widget_2->show();
     this->db->openDB();
     this->MainTableView = new QSqlTableModel(this);
@@ -385,6 +449,7 @@ void RootMainWindow::openRtTableViewInUser()
     this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
     this->MainTableView->setFilter("user_type = 0 AND user_name != 'root'");
     this->MainTableView->select();
+    //    this->MainTableView->removeColumn(3);
     this->MainTableView->setHeaderData(0,Qt::Horizontal,"用户ID");
     this->MainTableView->setHeaderData(1,Qt::Horizontal,"用户名");
     this->MainTableView->setHeaderData(2,Qt::Horizontal,"用户密码");
@@ -403,10 +468,14 @@ void RootMainWindow::openGrpTableViewInGrp(QStringList list)
     if(list[1]=="[学生机构]")
     {
         this->grp->setGroupType(0);
+        this->controlInfo = "DpmentGrp";
+        setSearchWidget();
     }
     else if(list[1] == "[学生社团]")
     {
         this->grp->setGroupType(1);
+        this->controlInfo = "DpmentGrp";
+        setSearchWidget();
     }
     bool ret = false;
     this->db->query->prepare("SELECT * FROM `group` WHERE `group_name` = :NAME");
@@ -447,6 +516,8 @@ void RootMainWindow::openGrpTableViewInGrp(QStringList list)
 
 void RootMainWindow::openDpmentTableViewInGrp(QStringList list)
 {
+    this->controlInfo="StuGrp";
+    setSearchWidget();
     qDebug()<<list[0]<<","<<list[1];
     this->ui->widget_2->show();
     this->dpment->setDepartmentName(list[0]);   //获取社团名
@@ -488,6 +559,8 @@ void RootMainWindow::openDpmentTableViewInGrp(QStringList list)
 
 void RootMainWindow::openGrp_0TableViewInGrp()
 {
+    this->controlInfo="Grp_0Grp";
+    setSearchWidget();
     this->db->openDB();
     this->ui->widget_2->show();
     this->MainTableView = new QSqlTableModel(this);
@@ -506,6 +579,8 @@ void RootMainWindow::openGrp_0TableViewInGrp()
 
 void RootMainWindow::openGrp_1TableViewInGrp()
 {
+    this->controlInfo="Grp_1Grp";
+    setSearchWidget();
     this->db->openDB();
     this->ui->widget_2->show();
     this->MainTableView = new QSqlTableModel(this);
@@ -524,6 +599,8 @@ void RootMainWindow::openGrp_1TableViewInGrp()
 
 void RootMainWindow::openStuTableViewInStu()
 {
+    this->controlInfo="StuStu";
+    setSearchWidget();
     this->db->openDB();
     this->ui->widget_2->show();
     this->MainTableView = new QSqlTableModel(this);
@@ -540,6 +617,8 @@ void RootMainWindow::openStuTableViewInStu()
 
 void RootMainWindow::openTchTableViewInTch()
 {
+    this->controlInfo="TchTch";
+    setSearchWidget();
     this->db->openDB();
     this->ui->widget_2->show();
     this->MainTableView = new QSqlTableModel(this);
@@ -622,4 +701,420 @@ void RootMainWindow::openTableViewInTchByDC(const QModelIndex &index)
     {
         openTchTableViewInTch();
     }
+}
+
+void RootMainWindow::on_pushButton_add_clicked()
+{
+    if(this->ui->widget_2->isHidden() || this->controlInfo=="")
+    {
+        return;
+    }
+    this->db->openDB();
+    int rowNum = this->MainTableView->rowCount();
+    if(this->controlInfo == "rootUser")
+    {
+        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
+        this->db->query->prepare("SELECT * FROM `user` WHERE `user_id` = (SELECT MAX(`user_id`) FROM `user`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("user_id").toInt();
+        }
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,3),0);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+    }
+    if(this->controlInfo == "TchUser")
+    {
+        this->db->query->prepare("SELECT * FROM `user` WHERE `user_id` = (SELECT MAX(`user_id`) FROM `user`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("user_id").toInt();
+        }
+        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,3),1);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+    }
+    if(this->controlInfo == "GrpUser")
+    {
+        this->db->query->prepare("SELECT * FROM `user` WHERE `user_id` = (SELECT MAX(`user_id`) FROM `user`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("user_id").toInt();
+        }
+        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,3),2);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+    }
+    if(this->controlInfo=="Grp_0Grp")
+    {
+        //        int rowNum = this->MainTableView->columnCount();
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,3),0);
+    }
+    if(this->controlInfo=="Grp_1Grp")
+    {
+        //        int rowNum = this->MainTableView->columnCount();
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,3),1);
+    }
+    if(this->controlInfo=="DpmentGrp")
+    {
+        //        qDebug()<<this->grp->getinfo();
+        this->db->query->prepare("SELECT * FROM `department` WHERE `department_id` = (SELECT MAX(`department_id`) FROM `department`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("department_id").toInt();
+        }
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,1),this->grp->getGroupID());
+    }
+    if(this->controlInfo=="StuGrp")
+    {
+        this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` = (SELECT MAX(`student_id`) FROM `student`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("student_id").toInt();
+        }
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+        this->stu->setStudentID(ID+1);
+    }
+    if(this->controlInfo=="StuStu")
+    {
+        this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` = (SELECT MAX(`student_id`) FROM `student`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("student_id").toInt();
+        }
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+    }
+    if(this->controlInfo=="TchTch")
+    {
+        this->db->query->prepare("SELECT * FROM `teacher` WHERE `teacher_id` = (SELECT MAX(`teacher_id`) FROM `teacher`)");
+        bool ret = this->db->query->exec();
+        if(!ret)
+        {
+            QMessageBox::critical(this,"错误","数据库查询错误");
+            return;
+        }
+        int ID = 0;
+        if(this->db->query->next())
+        {
+            ID = this->db->query->value("teacher_id").toInt();
+        }
+        this->MainTableView->insertRow(rowNum);
+        this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
+    }
+}
+
+void RootMainWindow::on_pushButton_change_clicked()
+{
+    if(this->ui->widget_2->isHidden() || this->controlInfo=="")
+    {
+        return;
+    }
+
+    int info = QMessageBox::question(this,"修改","确定修改吗？");
+    if(info==QMessageBox::Yes)
+    {
+        this->MainTableView->database().transaction();
+        if(this->MainTableView->submitAll())
+        {
+            this->MainTableView->database().commit();
+            QMessageBox::information(this,"提交","提交成功");
+            if(this->controlInfo=="StuGrp")
+            {
+                QSqlQuery IQuery;
+                IQuery.prepare("INSERT INTO `studentdependence`(`studentdependence_group_id`,`studentdependence_department_id`,`studentdependence_student_id`) VALUES(:GRPID,:DPMENTID,:STUID)");
+                IQuery.bindValue(":GRPID",this->dpment->getDepartmentGroupID());
+                IQuery.bindValue(":DPMENTID",this->dpment->getDepartmentID());
+                IQuery.bindValue(":STUID",this->stu->getStudentID());
+                bool ret = IQuery.exec();
+                if(!ret)
+                {
+                    QMessageBox::critical(this,"错误","数据库插入错误");
+                    return;
+                }
+            }
+            //            this->controlInfo = "";
+        }
+        else
+        {
+            QMessageBox::critical(this,"错误",QString("数据库错误:%1").arg(this->MainTableView->lastError().text()));
+        }
+    }
+    else
+    {
+        this->MainTableView->database().rollback();
+    }
+}
+
+void RootMainWindow::on_pushButton_delete_clicked()
+{
+    int curRow = this->ui->tableView->currentIndex().row();
+    //    int curCul = this->ui->tableView->currentIndex().column();
+    int stuID;
+    if(this->controlInfo=="StuGrp")
+    {
+        stuID = this->MainTableView->index(curRow,0).data().toInt();
+        int info = QMessageBox::question(this,"删除","确定删除吗？");
+        if(info==QMessageBox::Yes)
+        {
+            QSqlQuery DQuery;
+            DQuery.prepare("DELETE FROM `studentdependence` WHERE `studentdependence_student_id` = :STUID AND `studentdependence_department_id` = :DPMENTID");
+            DQuery.bindValue(":STUID",stuID);
+            DQuery.bindValue(":DPMENTID",this->dpment->getDepartmentID());
+            bool ret = DQuery.exec();
+            if(!ret)
+            {
+                QMessageBox::critical(this,"错误","数据库删除错误");
+                return;
+            }
+            QMessageBox::information(this,"删除","删除成功");
+        }
+        else
+        {
+            return;
+        }
+    }
+    else
+    {
+        this->MainTableView->removeRow(curRow);
+        int info = QMessageBox::question(this,"删除","确定删除吗？");
+        if(info==QMessageBox::Yes)
+        {
+            this->MainTableView->database().transaction();
+            if(this->MainTableView->submitAll())
+            {
+                this->MainTableView->database().commit();
+                QMessageBox::information(this,"删除","删除成功");
+            }
+            else
+            {
+                QMessageBox::critical(this,"错误",QString("数据库错误:%1").arg(this->MainTableView->lastError().text()));
+            }
+        }
+        else
+        {
+            this->MainTableView->database().rollback();
+        }
+    }
+}
+
+void RootMainWindow::on_pushButton_search_clicked()
+{
+    if(this->ui->widget_2->isHidden() || this->controlInfo == "")
+    {
+        return;
+    }
+    QString search = this->ui->lineEdit->text();
+    QString condition = this->ui->comboBox->currentText();
+    if(this->controlInfo == "GrpUser" || this->controlInfo=="TchUser" || this->controlInfo == "rootUser")
+    {
+        int userType;
+        if(this->controlInfo == "GrpUser")
+        {
+            userType = 2;
+        }
+        if(this->controlInfo == "TchUser")
+        {
+            userType = 1;
+        }
+        if(this->controlInfo == "rootUser")
+        {
+            userType = 0;
+        }
+        if(condition == "用户ID")
+        {
+            this->MainTableView->setFilter(QString("`user_id` = '%1' AND `user_type` = %2").arg(search).arg(userType));
+            this->MainTableView->select();
+        }
+        if(condition == "用户名")
+        {
+            this->MainTableView->setFilter(QString("`user_name` = '%1' AND `user_type` = %2").arg(search).arg(userType));
+            this->MainTableView->select();
+        }
+    }
+    if(this->controlInfo == "Grp_0Grp" || this->controlInfo == "Grp_1Grp")
+    {
+        int grpType;
+        if(this->controlInfo == "Grp_0Grp")
+        {
+            grpType = 0;
+        }if(this->controlInfo == "Grp_1Grp")
+        {
+            grpType = 1;
+        }
+        if(condition == "社团ID")
+        {
+            this->MainTableView->setFilter(QString("`group_user_id` = %1 AND `group_type` = %2").arg(search).arg(grpType));
+            this->MainTableView->select();
+        }
+        if(condition == "社团名称")
+        {
+            this->MainTableView->setFilter(QString("`group_name` = '%1' AND `group_type` = %2").arg(search).arg(grpType));
+            this->MainTableView->select();
+        }
+        if(condition == "社团指导教师ID")
+        {
+            this->MainTableView->setFilter(QString("`group_teacher_id` = %1 AND `group_type` = %2").arg(search).arg(grpType));
+            this->MainTableView->select();
+        }
+    }
+    if(this->controlInfo=="DpmentGrp")
+    {
+        if(condition == "部门ID")
+        {
+            this->MainTableView->setFilter(QString("`department_id` = %1 AND `department_group_id` = %2").arg(search).arg(this->grp->getGroupID()));
+            this->MainTableView->select();
+        }
+        if(condition == "部门名称")
+        {
+            this->MainTableView->setFilter(QString("`department_name` = '%1' AND `department_group_id` = %2").arg(search).arg(this->grp->getGroupID()));
+            this->MainTableView->select();
+        }
+    }
+    if(this->controlInfo=="StuGrp")
+    {
+        if(condition == "学生ID")
+        {
+            this->db->query->prepare("SELECT * FROM `studentdependence` WHERE `studentdependence_student_id` = :ID AND `studentdependence_department_id` = :DPMENTID");
+            this->db->query->bindValue(":ID",search);
+            this->db->query->bindValue(":DPMENTID",this->dpment->getDepartmentID());
+            bool ret = this->db->query->exec();
+            if(!ret)
+            {
+                QMessageBox::critical(this,"错误","数据库查询错误");
+            }
+            if(this->db->query->next())
+            {
+                this->MainTableView->setFilter(QString("`student_id` = %1 ").arg(search));
+                this->MainTableView->select();
+            }
+            else
+            {
+                this->MainTableView->setFilter("`student_id` = -1");
+                this->MainTableView->select();
+            }
+        }
+        if(condition == "学生姓名")
+        {
+            this->db->query->prepare("SELECT * FROM `studentdependence` WHERE (`studentdependence_student_id` IN (SELECT `student_id` FROM `student` WHERE `student_name` = :NAME)) AND (`studentdependence_department_id` = :DPMENTID)");
+            this->db->query->bindValue(":NAME",search);
+            this->db->query->bindValue(":DPMENTID",this->dpment->getDepartmentID());
+            bool ret = this->db->query->exec();
+            if(!ret)
+            {
+                QMessageBox::critical(this,"错误","数据库查询错误");
+            }
+            if(this->db->query->next())
+            {
+                int dependence = this->db->query->value("studentdependence_student_id").toInt();
+                qDebug()<<dependence;
+                this->MainTableView->setFilter(QString("`student_id` = %1 ").arg(dependence));
+                this->MainTableView->select();
+            }
+            else
+            {
+                this->MainTableView->setFilter("`student_name` = ''");
+                this->MainTableView->select();
+            }
+        }
+    }
+    if(this->controlInfo=="StuStu")
+    {
+        if(condition=="学生ID")
+        {
+            this->MainTableView->setFilter(QString("`student_id` = %1").arg(search));
+            this->MainTableView->select();
+        }
+        if(condition=="学生性别")
+        {
+            this->MainTableView->setFilter(QString("`student_sex` = %1").arg(search));
+            this->MainTableView->select();
+        }
+        if(condition=="学生姓名")
+        {
+            this->MainTableView->setFilter(QString("student_name = '%1'").arg(search));
+            this->MainTableView->select();
+        }
+    }
+    if(this->controlInfo=="TchTch")
+       {
+//           this->ui->comboBox->addItem("教师ID");
+//           this->ui->comboBox->addItem("教师用户ID");
+//           this->ui->comboBox->addItem("教师姓名");
+//           this->ui->comboBox->addItem("教师性别");
+        if(condition=="教师ID")
+        {
+            this->MainTableView->setFilter(QString("`teacher_id` = %1").arg(search));
+            this->MainTableView->select();
+        }
+        if(condition=="教师用户ID")
+        {
+            this->MainTableView->setFilter(QString("`teacher_id` = %1").arg(search));
+            this->MainTableView->select();
+        }
+        if(condition=="教师姓名")
+        {
+            this->MainTableView->setFilter(QString("`teacher_name` = '%1'").arg(search));
+            this->MainTableView->select();
+        }
+        if(condition=="教师性别")
+        {
+            this->MainTableView->setFilter(QString("`teacher_sex` = %1").arg(search));
+            this->MainTableView->select();
+        }
+       }
+}
+
+void RootMainWindow::on_pushButton_reset_clicked()
+{
+    this->ui->lineEdit->clear();
 }

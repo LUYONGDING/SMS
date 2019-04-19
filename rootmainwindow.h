@@ -13,6 +13,7 @@
 #include <QSqlTableModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+#include <QModelIndex>
 
 #include "dbconnt.h"
 #include "teacher.h"
@@ -50,11 +51,14 @@ private:
     QStandardItemModel * tchModel;
     QSqlTableModel * MainTableView;
     QSqlRelationalTableModel * RMainTableView;
+    QString controlInfo;
+    bool isRoot = false;
     void paintEvent(QPaintEvent *event);
     void setUserModel();
     void setGroupModel();
     void setStuModel();
     void setTchModel();
+    void setSearchWidget();
 signals:
     void sendOpenInfo(QString info);
     void sendOpenInfoList_Grp(QStringList list);
@@ -78,6 +82,12 @@ public slots:
    void openTableViewInGrpByDC(const QModelIndex & index);
    void openTableViewInStuByDC(const QModelIndex & index);
    void openTableViewInTchByDC(const QModelIndex & index);
+private slots:
+   void on_pushButton_add_clicked();
+   void on_pushButton_change_clicked();
+   void on_pushButton_delete_clicked();
+   void on_pushButton_search_clicked();
+   void on_pushButton_reset_clicked();
 };
 
 #endif // ROOTMAINWINDOW_H

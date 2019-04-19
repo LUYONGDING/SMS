@@ -213,6 +213,8 @@ void TeacherMainWindow::setGroupModel()
 }
 void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
 {
+
+
     QModelIndex index = ui->treeView_2->indexAt(pos);
     QMenu * tree_menu = new QMenu(this);
     QStandardItem * tmpItem = model->itemFromIndex(index);
