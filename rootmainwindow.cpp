@@ -1045,26 +1045,28 @@ void RootMainWindow::on_pushButton_search_clicked()
         }
         if(condition == "学生姓名")
         {
-            this->db->query->prepare("SELECT * FROM `studentdependence` WHERE (`studentdependence_student_id` IN (SELECT `student_id` FROM `student` WHERE `student_name` = :NAME)) AND (`studentdependence_department_id` = :DPMENTID)");
-            this->db->query->bindValue(":NAME",search);
-            this->db->query->bindValue(":DPMENTID",this->dpment->getDepartmentID());
-            bool ret = this->db->query->exec();
-            if(!ret)
-            {
-                QMessageBox::critical(this,"错误","数据库查询错误");
-            }
-            if(this->db->query->next())
-            {
-                int dependence = this->db->query->value("studentdependence_student_id").toInt();
-                qDebug()<<dependence;
-                this->MainTableView->setFilter(QString("`student_id` = %1 ").arg(dependence));
-                this->MainTableView->select();
-            }
-            else
-            {
-                this->MainTableView->setFilter("`student_name` = ''");
-                this->MainTableView->select();
-            }
+            //            this->db->query->prepare("SELECT * FROM `studentdependence` WHERE (`studentdependence_student_id` IN (SELECT `student_id` FROM `student` WHERE `student_name` = :NAME)) AND (`studentdependence_department_id` = :DPMENTID)");
+            //            this->db->query->bindValue(":NAME",search);
+            //            this->db->query->bindValue(":DPMENTID",this->dpment->getDepartmentID());
+            //            bool ret = this->db->query->exec();
+            //            if(!ret)
+            //            {
+            //                QMessageBox::critical(this,"错误","数据库查询错误");
+            //            }
+            //            if(this->db->query->next())
+            //            {
+            //                int dependence = this->db->query->value("studentdependence_student_id").toInt();
+            //                qDebug()<<dependence;
+            //                this->MainTableView->setFilter(QString("`student_id` = %1 ").arg(dependence));
+            //                this->MainTableView->select();
+            //            }
+            this->MainTableView->setFilter(QString("`student_name` = '%1' AND (`student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = %2))").arg(search).arg(this->dpment->getDepartmentID()));
+            this->MainTableView->select();
+//            else
+//            {
+//                this->MainTableView->setFilter("`student_name` = ''");
+//                this->MainTableView->select();
+//            }
         }
     }
     if(this->controlInfo=="StuStu")
@@ -1086,11 +1088,11 @@ void RootMainWindow::on_pushButton_search_clicked()
         }
     }
     if(this->controlInfo=="TchTch")
-       {
-//           this->ui->comboBox->addItem("教师ID");
-//           this->ui->comboBox->addItem("教师用户ID");
-//           this->ui->comboBox->addItem("教师姓名");
-//           this->ui->comboBox->addItem("教师性别");
+    {
+        //           this->ui->comboBox->addItem("教师ID");
+        //           this->ui->comboBox->addItem("教师用户ID");
+        //           this->ui->comboBox->addItem("教师姓名");
+        //           this->ui->comboBox->addItem("教师性别");
         if(condition=="教师ID")
         {
             this->MainTableView->setFilter(QString("`teacher_id` = %1").arg(search));
@@ -1111,7 +1113,7 @@ void RootMainWindow::on_pushButton_search_clicked()
             this->MainTableView->setFilter(QString("`teacher_sex` = %1").arg(search));
             this->MainTableView->select();
         }
-       }
+    }
 }
 
 void RootMainWindow::on_pushButton_reset_clicked()
