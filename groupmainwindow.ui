@@ -40,10 +40,23 @@
      <string>其他</string>
     </property>
     <addaction name="actionabout"/>
+    <addaction name="actionaboutQt"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>用户</string>
+    </property>
+    <addaction name="actionuserInfo"/>
+    <addaction name="actionloginOut"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="layoutDirection">
+    <enum>Qt::RightToLeft</enum>
+   </property>
+  </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -93,6 +106,21 @@ border-top:1px solid gray  </string>
   <action name="actionabout">
    <property name="text">
     <string>关于</string>
+   </property>
+  </action>
+  <action name="actionaboutQt">
+   <property name="text">
+    <string>关于Qt</string>
+   </property>
+  </action>
+  <action name="actionuserInfo">
+   <property name="text">
+    <string>用户信息</string>
+   </property>
+  </action>
+  <action name="actionloginOut">
+   <property name="text">
+    <string>登出</string>
    </property>
   </action>
  </widget>

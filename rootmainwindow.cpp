@@ -6,11 +6,14 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     ui(new Ui::RootMainWindow)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->us = new user();
     this->db = new DBconnt();
     this->tch = new teacher();
     this->grp = new group();
     this->dpment = new department();
+    this->timer = new QTimer(this);
+    this->currentTimeLabel = new QLabel(this);
     setMarginSpacing();
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
     QWidget * tempWidget = new QWidget(this);
@@ -23,11 +26,45 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     connect(ui->actionaboutQt,&QAction::triggered,[=](){
         QMessageBox::aboutQt(this);
     });
+    connect(ui->actionuserInfo,&QAction::triggered,this,[=](){
+        QString info = QString("用户名：%1\n\n用户类型:管理员").arg(this->us->getUserName());
+        QMessageBox::information(this,"用户信息",info);
+    });
+    connect(ui->actionloginOut,&QAction::triggered,this,[=](){
+        int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
+        if(lgnout==QMessageBox::Yes)
+        {
+            qDebug()<<"用户登出";
+            emit loginOut();
+            this->close();
+        }
+        else
+        {
+            return;
+        }
+    });
+    connect(this->ui->actionshow_control_widget,&QAction::triggered,this,[=](){
+        this->ui->dockWidget_ToolButton->show();
+    });
+    connect(this->ui->actionshow_search_widget,&QAction::triggered,this,[=](){
+        this->ui->dockWidget->show();
+    });
+    this->ui->statusbar->addWidget(this->currentTimeLabel);
+    connect(this->timer,&QTimer::timeout,this,[=](){
+        QDateTime current_time = QDateTime::currentDateTime();
+        QString timestr = current_time.toString("yyyy年MM月dd日 hh:mm:ss");
+        this->currentTimeLabel->setText(timestr);
+    });
 }
 
 RootMainWindow::~RootMainWindow()
 {
     delete ui;
+    delete this->dpment;
+    delete this->grp;
+    delete this->tch;
+    delete this->db;
+    delete this->us;
 }
 
 void RootMainWindow::setMarginSpacing()
@@ -253,9 +290,9 @@ void RootMainWindow::setSearchWidget()
     }
 }
 
-void RootMainWindow::getUserInfo(user *us)
+void RootMainWindow::getUserInfo(user & us)
 {
-    this->us = us;
+    *(this->us) = us;
     if(this->us->getUserName()=="root")
     {
         this->isRoot = true;

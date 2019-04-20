@@ -14,6 +14,9 @@
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
 #include <QModelIndex>
+#include <QLabel>
+#include <QTimer>
+#include <QDateTime>
 
 #include "dbconnt.h"
 #include "teacher.h"
@@ -52,6 +55,8 @@ private:
     QSqlTableModel * MainTableView;
     QSqlRelationalTableModel * RMainTableView;
     QString controlInfo;
+    QTimer * timer;
+    QLabel * currentTimeLabel;
     bool isRoot = false;
     void paintEvent(QPaintEvent *event);
     void setUserModel();
@@ -63,8 +68,9 @@ signals:
     void sendOpenInfo(QString info);
     void sendOpenInfoList_Grp(QStringList list);
     void sendOpenInfoList_Dpment(QStringList list);
+    void loginOut();
 public slots:
-   void getUserInfo(user * us);
+   void getUserInfo(user & us);
    void CustomContextMenu_User(const QPoint &pos);
    void CustomContextMenu_Grp(const QPoint &pos);
    void CustomContextMenu_Stu(const QPoint &pos);

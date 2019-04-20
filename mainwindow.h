@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QTimer>
+#include <QDateTime>
 
 
 #include "dbconnt.h"
@@ -41,9 +42,12 @@ public:
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
 signals:
-    void sendUserInfo(user * us);
+    void sendUserInfo0(user & us);
+    void sendUserInfo1(user & us);
+    void sendUserInfo2(user & us);
 private slots:
     void userLogin();   //登录槽函数
+    void timeUpdate();
 private:
     Ui::MainWindow *ui;
 
@@ -60,6 +64,8 @@ private:
     RootMainWindow * rtmain;
 
     GroupMainWindow * grpmain;
+
+    QLabel * currentTimeLabel;
 };
 
 #endif // MAINWINDOW_H

@@ -11,6 +11,9 @@
 #include <QSqlQueryModel>
 #include <QAction>
 #include <QSqlRelationalTableModel>
+#include <QLabel>
+#include <QDateTime>
+#include <QTimer>
 
 #include "group.h"
 #include "department.h"
@@ -42,12 +45,15 @@ private:
     QSqlQueryModel * mainTableView;
     QSqlRelationalTableModel * RMainTableView;
     QPainter * painter;
+    QTimer * timer;
+    QLabel * currentTimeLabel;
     void setMarginSpacing();
     void setGroupModel();
 signals:
     void sendOpenInfo(QStringList list);
+    void loginOut();
 public slots:
-    void getUserInfo(user * us);
+    void getUserInfo(user & us);
     void CustomContextMenu(const QPoint &);
     void opendpmentTableView(QStringList list);
     void openTableViewByDC(const QModelIndex & index);

@@ -16,11 +16,12 @@ DBconnt::DBconnt()  //构造函数
     QTextCodec::setCodecForLocale(codec);
 
     //!设置数据库参数
-    this->HostName = "127.0.0.1";
-    this->UserName = "root";
-    this->Password = "root";
-    this->DatabaseName = "group_manager_system";
-    this->Port = 3306;
+//    this->HostName = "127.0.0.1";
+//    this->UserName = "root";
+//    this->Password = "root";
+//    this->DatabaseName = "group_manager_system";
+//    this->Port = 3306;
+    readConfig();
 
 
 #if debug_mode
@@ -103,6 +104,7 @@ void DBconnt::closeDB()
     }
     qDebug() << "关闭数据库:" <<this->db->databaseName();
     delete this->query;
+    this->query = NULL;
     this->db->close();   //关闭数据库
 }
 
@@ -128,4 +130,52 @@ void DBconnt::openDB()
         return;
     }
     this->query = new QSqlQuery();  //开辟空间：数据库操作类
+}
+
+int DBconnt::readConfig()
+{
+    qDebug()<<QDir::currentPath();
+    QFile configFile("config.ini");
+    if(!configFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"打开配置文件错误"<<endl;
+        return 0;
+    }
+    QTextStream txtInput(&configFile);
+    qDebug()<<configFile.fileName();
+    QStringList linelist;
+    QString line;
+    QString key;
+    QString value;
+    while(!txtInput.atEnd())
+    {
+        line = txtInput.readLine();
+        if(line.startsWith("$"))
+        {
+           linelist = line.split("=");
+           key=linelist[0];
+           value=linelist[1];
+           if(key.trimmed() == "$HostName")
+           {
+//               hostname = value.trimmed();
+               this->HostName = value.trimmed();
+           }
+           if(key.trimmed() == "$UserName")
+           {
+               this->UserName = value.trimmed();
+           }
+           if(key.trimmed() == "$Password")
+           {
+               this->Password = value.trimmed();
+           }
+           if(key.trimmed() == "$DatabaseName")
+           {
+               this->DatabaseName = value.trimmed();
+           }
+           if(key.trimmed() == "$Port")
+           {
+               this->Port = value.trimmed().toInt();
+           }
+        }
+    }
 }

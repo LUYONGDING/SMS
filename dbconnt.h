@@ -8,6 +8,8 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTextCodec>
+#include <QDir>
+#include <QFile>
 
 #include "debugmode.h"
 
@@ -32,6 +34,7 @@ private:
     QString Password;   //密码
     QString DatabaseName;   //数据库名
     int Port;
+    int readConfig();
 
 signals:
 

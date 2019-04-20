@@ -6,6 +6,7 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
     ui(new Ui::TeacherMainWindow)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->us = new user();
     this->db = new DBconnt();
     this->tch = new teacher();
@@ -27,6 +28,9 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
         QMessageBox::about(this,"关于",about);
     });
+    connect(ui->actionaboutQt,&QAction::triggered,[=](){
+        QMessageBox::aboutQt(this);
+    });
     connect(ui->actionloginout,&QAction::triggered,[=](){
         int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
         if(lgnout==QMessageBox::Yes)
@@ -40,26 +44,29 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
             return;
         }
     });
+    connect(ui->actionshow_control_widget,&QAction::triggered,[=](){
+        this->ui->dockWidget_ToolButton->show();
+    });
+    connect(ui->actionshow_search_widget,&QAction::triggered,[=](){
+        this->ui->dockWidget_2->show();
+    });
+    this->timer = new QTimer(this);
+    this->currentTimeLabel = new QLabel(this);
+    this->ui->statusbar->addWidget(this->currentTimeLabel);
+    connect(this->timer,&QTimer::timeout,this,[=](){
+        QDateTime current_time = QDateTime::currentDateTime();
+        QString timestr = current_time.toString("yyyy年MM月dd日 hh:mm:ss");
+        this->currentTimeLabel->setText(timestr);
+    });
+    this->timer->start(1000);
 }
 
 TeacherMainWindow::~TeacherMainWindow()
 {
-    if(this->db != NULL)
-    {
-        delete this->db;
-    }
-    if(this->db != NULL)
-    {
-        delete this->tch;
-    }
-    if(this->grp != NULL)
-    {
-        delete this->grp;
-    }
-    if(this->us != NULL)
-    {
-        delete this->us;
-    }
+    delete this->db;
+    delete this->tch;
+    delete this->grp;
+    delete this->us;
     delete ui;
 }
 void TeacherMainWindow::setMarginSpacing()
@@ -100,8 +107,8 @@ void TeacherMainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设�
     painter.drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
 }
 
-void TeacherMainWindow::getUserInfo(user * us){ //获得登陆用户的槽函数
-    this->us = us;
+void TeacherMainWindow::getUserInfo(user & us){ //获得登陆用户的槽函数
+    *(this->us) = us;
     this->setWindowTitle(QString("%1 [教师] - 学生社团管理系统").arg(this->us->getUserName()));   //设置窗口标题
     setGroupModel();
     connect(ui->treeView_2,&QTreeView::customContextMenuRequested,this,&TeacherMainWindow::CustomContextMenu);

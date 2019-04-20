@@ -40,11 +40,42 @@
      <string>其他</string>
     </property>
     <addaction name="actionabout"/>
+    <addaction name="separator"/>
     <addaction name="actionaboutQt"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>用户</string>
+    </property>
+    <addaction name="actionuserInfo"/>
+    <addaction name="separator"/>
+    <addaction name="actionloginOut"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>窗口</string>
+    </property>
+    <widget class="QMenu" name="menushow">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="title">
+      <string>显示</string>
+     </property>
+     <addaction name="actionshow_control_widget"/>
+     <addaction name="actionshow_search_widget"/>
+    </widget>
+    <addaction name="menushow"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="layoutDirection">
+    <enum>Qt::RightToLeft</enum>
+   </property>
+  </widget>
   <widget class="QDockWidget" name="dockWidget_left">
    <property name="features">
     <set>QDockWidget::NoDockWidgetFeatures</set>
@@ -251,11 +282,13 @@
     <string>工具栏</string>
    </property>
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionshow_control_widget"/>
+   <addaction name="actionshow_search_widget"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="allowedAreas">
@@ -343,6 +376,26 @@
   <action name="actionaboutQt">
    <property name="text">
     <string>关于Qt</string>
+   </property>
+  </action>
+  <action name="actionuserInfo">
+   <property name="text">
+    <string>用户信息</string>
+   </property>
+  </action>
+  <action name="actionloginOut">
+   <property name="text">
+    <string>登出</string>
+   </property>
+  </action>
+  <action name="actionshow_control_widget">
+   <property name="text">
+    <string>数据操作</string>
+   </property>
+  </action>
+  <action name="actionshow_search_widget">
+   <property name="text">
+    <string>查询窗口</string>
    </property>
   </action>
  </widget>

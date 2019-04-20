@@ -6,10 +6,13 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
     ui(new Ui::GroupMainWindow)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->db = new DBconnt();
     this->us = new user();
     this->grp = new group();
     this->dpment = new department();
+    this->timer = new QTimer(this);
+    this->currentTimeLabel = new QLabel(this);
     this->mainTableView = new QSqlQueryModel(this);
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
     setMarginSpacing();
@@ -20,6 +23,32 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
         QMessageBox::about(this,"关于",about);
     });
+    connect(this->ui->actionaboutQt,&QAction::triggered,[=](){
+        QMessageBox::aboutQt(this);
+    });
+    connect(this->ui->actionuserInfo,&QAction::triggered,[=](){
+        QMessageBox::information(this,"用户信息",QString("用户名：%1\n用户类型：%2").arg(this->us->getUserName()).arg("社团/机构"));
+    });
+    connect(this->ui->actionloginOut,&QAction::triggered,[=](){
+        int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
+        if(lgnout==QMessageBox::Yes)
+        {
+//            qDebug()<<"用户登出";
+            emit loginOut();
+            this->close();
+        }
+        else
+        {
+            return;
+        }
+    });
+    this->ui->statusbar->addWidget(this->currentTimeLabel);
+    connect(this->timer,&QTimer::timeout,this,[=](){
+        QDateTime current_time = QDateTime::currentDateTime();
+        QString timestr = current_time.toString("yyyy年MM月dd日 hh:mm:ss");
+        this->currentTimeLabel->setText(timestr);
+    });
+    this->timer->start(1000);
 }
 
 GroupMainWindow::~GroupMainWindow()
@@ -30,9 +59,9 @@ GroupMainWindow::~GroupMainWindow()
     delete this->dpment;
     delete ui;
 }
-void GroupMainWindow::getUserInfo(user * us)
+void GroupMainWindow::getUserInfo(user & us)
 {
-    this->us = us;
+    *(this->us) = us;
 //    qDebug()<<this->us->getinfo();
     this->setWindowTitle(QString("%1 [学生社团/学生机构] - 学生社团管理系统").arg(this->us->getUserName()));
     setGroupModel();

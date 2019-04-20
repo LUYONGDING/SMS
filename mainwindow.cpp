@@ -27,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //        this->show();
 //    });
     this->timer = new QTimer(this);
+    this->currentTimeLabel = new QLabel(this);
+    connect(this->timer,&QTimer::timeout,this,&MainWindow::timeUpdate);
+    ui->statusBar->addWidget(this->currentTimeLabel);
+    this->timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +45,19 @@ MainWindow::~MainWindow()
 //        delete regist;
 //        regist = NULL;
 //    }
+    delete this->us;
+    if(this->tchmain!=NULL)
+    {
+        delete this->tchmain;
+    }
+    if(this->rtmain!=NULL)
+    {
+        delete this->rtmain;
+    }
+    if(this->grpmain!=NULL)
+    {
+        delete this->grpmain;
+    }
     delete ui;
 }
 void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
@@ -80,14 +97,22 @@ void MainWindow::userLogin()    //登陆槽函数
         {
             QMessageBox::information(this,"login","管理员登录成功");
             this->rtmain = new RootMainWindow();
-            connect(this,&MainWindow::sendUserInfo,rtmain,&RootMainWindow::getUserInfo);
-            connect(this->timer,&QTimer::timeout,[=](){
-                rtmain->show();
-                emit sendUserInfo(this->us);
-                this->timer->stop();
+            connect(this,&MainWindow::sendUserInfo0,rtmain,&RootMainWindow::getUserInfo);
+//            connect(this->timer,&QTimer::timeout,this,[=](){
+//                rtmain->show();
+//                emit sendUserInfo0(this->us);
+//                this->timer->stop();
+//            },Qt::UniqueConnection);
+            connect(rtmain,&RootMainWindow::loginOut,this,[=](){
+                this->ui->lineEdit_userName->clear();
+                this->ui->lineEdit_passwd->clear();
+                this->show();
             });
+            emit sendUserInfo0(*(this->us));
+            this->rtmain->show();
             this->timer->start(1000);
             this->hide();
+            return;
             //code
         }
         if(1==us->getUserType())
@@ -95,41 +120,57 @@ void MainWindow::userLogin()    //登陆槽函数
             QMessageBox::information(this,"login","教师登录成功");
 
             this->tchmain = new TeacherMainWindow();
-            connect(tchmain,&TeacherMainWindow::loginOut,this,&MainWindow::show);
-            if(!this->tchmain->isWindow())
-            {
-                delete this->tchmain;
-            }
-            connect(this,&MainWindow::sendUserInfo,tchmain,&TeacherMainWindow::getUserInfo);
-            connect(this->timer,&QTimer::timeout,[=](){
-                tchmain->show();
-                emit sendUserInfo(this->us);
-                this->timer->stop();
+            connect(tchmain,&TeacherMainWindow::loginOut,this,[=](){
+                this->ui->lineEdit_userName->clear();
+                this->ui->lineEdit_passwd->clear();
+                this->show();
             });
-            this->timer->start(1000);
+            connect(this,&MainWindow::sendUserInfo1,tchmain,&TeacherMainWindow::getUserInfo);
+//            connect(this->timer,&QTimer::timeout,this,[=](){
+//                tchmain->show();
+//                emit sendUserInfo1(this->us);
+//                this->timer->stop();
+//            },Qt::UniqueConnection);
+//            this->timer->start(1000);
+            emit sendUserInfo1(*(this->us));
+            tchmain->show();
             this->hide();
+            return;
             //code
         }
         if(2==us->getUserType())
         {
             QMessageBox::information(this,"login","社团登录成功");
             this->grpmain = new GroupMainWindow();
-            if(!this->grpmain->isWindow())
-            {
-                delete this->tchmain;
-            }
-            connect(this,&MainWindow::sendUserInfo,grpmain,&GroupMainWindow::getUserInfo);
-            connect(this->timer,&QTimer::timeout,[=](){
-                grpmain->show();
-                emit sendUserInfo(us);
-                this->timer->stop();
+            connect(this->grpmain,&GroupMainWindow::loginOut,[=](){
+                this->ui->lineEdit_userName->clear();
+                this->ui->lineEdit_passwd->clear();
+//                delete this->grpmain;
+                this->show();
             });
-            this->timer->start(1000);
+            connect(this,&MainWindow::sendUserInfo2,grpmain,&GroupMainWindow::getUserInfo);
+//            connect(this->timer,&QTimer::timeout,this,[=](){
+//                grpmain->show();
+//                emit sendUserInfo2(us);
+//                this->timer->stop();
+//            },Qt::UniqueConnection);
+//            this->timer->start(1000);
+            emit sendUserInfo2(*(this->us));
+            this->grpmain->show();
             this->hide();
+            return;
             //code
         }
-        db->closeDB();
+//        db->closeDB();
     }
+}
+
+void MainWindow::timeUpdate()
+{
+    //获取时间
+    QDateTime current_time = QDateTime::currentDateTime();
+    QString timestr = current_time.toString("yyyy年MM月dd日 hh:mm:ss");
+    currentTimeLabel->setText(timestr);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)

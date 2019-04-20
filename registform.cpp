@@ -8,9 +8,7 @@ registForm::registForm(QWidget *parent) :
 
     this->setWindowFlags(Qt::Widget | Qt::Dialog);
     this->setWindowModality(Qt::WindowModal);   //设置为模态窗口
-
     ui->setupUi(this);
-
     sltTeacher = NULL;
     this->setWindowTitle("用户注册");   //设置窗口标题
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
@@ -385,9 +383,10 @@ void registForm::userRegist()
 }
 void registForm::closeEvent(QCloseEvent *event) //窗口关闭事件
 {
-    if(sltTeacher != NULL)  //如果选择教师窗口存在则一并关闭
+    if(sltTeacher!=NULL)  //如果选择教师窗口存在则一并关闭
     {
         sltTeacher->close();
+        delete this->sltTeacher;
     }
     event->accept();
 }

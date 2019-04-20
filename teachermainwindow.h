@@ -13,6 +13,9 @@
 #include <QSqlTableModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+#include <QTimer>
+#include <QDateTime>
+#include <QLabel>
 
 #include "dbconnt.h"
 #include "teacher.h"
@@ -51,13 +54,15 @@ private:
     void setMarginSpacing();
     void setSearchWidget();
     QString controlInfo;
+    QLabel * currentTimeLabel;
+    QTimer * timer;
 signals:
     void sendOpenInfo(QStringList list);
     void sendOpenInfo2(QStringList list);
     void sendOpenInfo3(QStringList list);
     void loginOut();
 public slots:
-    void getUserInfo(user * us);
+    void getUserInfo(user & us);
     void CustomContextMenu(const QPoint &);
     void setGroupModel();
     void openGrpTableView(QStringList list);

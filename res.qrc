@@ -4,5 +4,10 @@
         <file>Icon/guishen_0131ev05b08mg01.png</file>
         <file>background/guishen_0039ev05a07.jpg</file>
         <file>Icon/group.png</file>
+        <file>Icon/data_delete_query_sql_stock_16px_918_easyicon.net.png</file>
+        <file>Icon/data_edit_query_sql_16px_2618_easyicon.net.png</file>
+        <file>Icon/data_new_query_sql_16px_2871_easyicon.net.png</file>
+        <file>Icon/Browser_tool_485px_1191946_easyicon.net.png</file>
+        <file>Icon/Magnify_query_256px_1194075_easyicon.net.png</file>
     </qresource>
 </RCC>

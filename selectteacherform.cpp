@@ -8,7 +8,7 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     this->db = new DBconnt();
     this->tch = new teacher();
     ui->setupUi(this);
-
+//    this->setAttribute(Qt::WA_DeleteOnClose);
     ui->comboBox_search->addItem("ID");
     ui->comboBox_search->addItem("姓名");
     ui->comboBox_search->addItem("性别");
@@ -19,7 +19,6 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     connect(ui->pushButton_cancel,&QPushButton::clicked,[=](){   //关闭按钮的信号与槽函数连接
         this->close();
     });
-
     //    this->db->openDB();
     //    this->teacherModel = new QSqlTableModel(this);  //为教师Model开辟空间
     //    teacherModel->setTable("teacher");  //选择teacher表
