@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QLabel>
+#include <QBitmap>
 
 #include "dbconnt.h"
 #include "teacher.h"

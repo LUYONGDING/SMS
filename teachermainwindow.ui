@@ -109,7 +109,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionshow_control_widget"/>
    <addaction name="actionshow_search_widget"/>
@@ -147,6 +147,19 @@ border-top:1px solid gray;</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_ToolButton">
+   <property name="windowIcon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Browser_tool_485px_1191946_easyicon.net.png</normaloff>:/mainWin/Icon/Browser_tool_485px_1191946_easyicon.net.png</iconset>
+   </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">boder:0px;</string>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="allowedAreas">
     <set>Qt::RightDockWidgetArea</set>
    </property>
@@ -157,22 +170,55 @@ border-top:1px solid gray;</string>
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
+    <property name="styleSheet">
+     <string notr="true">boder:0px;</string>
+    </property>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QWidget" name="widget_2" native="true">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="0">
-         <spacer name="horizontalSpacer">
+        <item row="6" column="1">
+         <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
-            <height>20</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="2" column="1">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_add">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string>增加记录</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</iconset>
+          </property>
+         </widget>
         </item>
         <item row="4" column="1">
          <spacer name="verticalSpacer_4">
@@ -187,6 +233,17 @@ border-top:1px solid gray;</string>
           </property>
          </spacer>
         </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pushButton_change">
+          <property name="text">
+           <string>修改记录</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</iconset>
+          </property>
+         </widget>
+        </item>
         <item row="5" column="1">
          <widget class="QPushButton" name="pushButton_delete">
           <property name="text">
@@ -197,19 +254,6 @@ border-top:1px solid gray;</string>
             <normaloff>:/mainWin/Icon/data_delete_query_sql_stock_16px_918_easyicon.net.png</normaloff>:/mainWin/Icon/data_delete_query_sql_stock_16px_918_easyicon.net.png</iconset>
           </property>
          </widget>
-        </item>
-        <item row="6" column="1">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="0" column="1">
          <spacer name="verticalSpacer_2">
@@ -237,37 +281,15 @@ border-top:1px solid gray;</string>
           </property>
          </spacer>
         </item>
-        <item row="3" column="1">
-         <widget class="QPushButton" name="pushButton_change">
-          <property name="text">
-           <string>修改记录</string>
-          </property>
-          <property name="icon">
-           <iconset resource="res.qrc">
-            <normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton_add">
-          <property name="text">
-           <string>增加记录</string>
-          </property>
-          <property name="icon">
-           <iconset resource="res.qrc">
-            <normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <spacer name="verticalSpacer_3">
+        <item row="1" column="0">
+         <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -279,6 +301,10 @@ border-top:1px solid gray;</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2">
+   <property name="windowIcon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Magnify_query_256px_1194075_easyicon.net.png</normaloff>:/mainWin/Icon/Magnify_query_256px_1194075_easyicon.net.png</iconset>
+   </property>
    <property name="allowedAreas">
     <set>Qt::BottomDockWidgetArea</set>
    </property>
@@ -331,12 +357,20 @@ border-top:1px solid gray;</string>
        <property name="text">
         <string>查询</string>
        </property>
+       <property name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/mainWin/Icon/query_search_40px_1135839_easyicon.net.png</normaloff>:/mainWin/Icon/query_search_40px_1135839_easyicon.net.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_reset">
        <property name="text">
         <string>清空</string>
+       </property>
+       <property name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/mainWin/Icon/Inbox_Empty_512px_1177992_easyicon.net.png</normaloff>:/mainWin/Icon/Inbox_Empty_512px_1177992_easyicon.net.png</iconset>
        </property>
       </widget>
      </item>
@@ -357,21 +391,37 @@ border-top:1px solid gray;</string>
    </widget>
   </widget>
   <action name="actionabout">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/about_1102px_1143785_easyicon.net.png</normaloff>:/mainWin/Icon/about_1102px_1143785_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>关于</string>
    </property>
   </action>
   <action name="actionuserInfo">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/group.png</normaloff>:/mainWin/Icon/group.png</iconset>
+   </property>
    <property name="text">
     <string>用户信息</string>
    </property>
   </action>
   <action name="actionloginout">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Logout_225px_1198327_easyicon.net.png</normaloff>:/mainWin/Icon/Logout_225px_1198327_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>登出</string>
    </property>
   </action>
   <action name="actionaboutQt">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/assistant_qt_256px_1171940_easyicon.net.png</normaloff>:/mainWin/Icon/assistant_qt_256px_1171940_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>关于Qt</string>
    </property>

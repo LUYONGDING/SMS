@@ -190,6 +190,10 @@
           <property name="text">
            <string>增加一条记录</string>
           </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</normaloff>:/mainWin/Icon/data_new_query_sql_16px_2871_easyicon.net.png</iconset>
+          </property>
          </widget>
         </item>
         <item row="3" column="1">
@@ -197,12 +201,20 @@
           <property name="text">
            <string>修改记录</string>
           </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</normaloff>:/mainWin/Icon/data_edit_query_sql_16px_2618_easyicon.net.png</iconset>
+          </property>
          </widget>
         </item>
         <item row="5" column="1">
          <widget class="QPushButton" name="pushButton_delete">
           <property name="text">
            <string>删除记录</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/mainWin/Icon/data_delete_query_sql_stock_16px_918_easyicon.net.png</normaloff>:/mainWin/Icon/data_delete_query_sql_stock_16px_918_easyicon.net.png</iconset>
           </property>
          </widget>
         </item>
@@ -281,8 +293,14 @@
    <property name="windowTitle">
     <string>工具栏</string>
    </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -343,12 +361,20 @@
        <property name="text">
         <string>查询</string>
        </property>
+       <property name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/mainWin/Icon/query_search_40px_1135839_easyicon.net.png</normaloff>:/mainWin/Icon/query_search_40px_1135839_easyicon.net.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_reset">
        <property name="text">
         <string>清空</string>
+       </property>
+       <property name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/mainWin/Icon/Inbox_Empty_512px_1177992_easyicon.net.png</normaloff>:/mainWin/Icon/Inbox_Empty_512px_1177992_easyicon.net.png</iconset>
        </property>
       </widget>
      </item>
@@ -369,36 +395,62 @@
    </widget>
   </widget>
   <action name="actionabout">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/about_1102px_1143785_easyicon.net.png</normaloff>:/mainWin/Icon/about_1102px_1143785_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>关于</string>
    </property>
   </action>
   <action name="actionaboutQt">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/assistant_qt_256px_1171940_easyicon.net.png</normaloff>:/mainWin/Icon/assistant_qt_256px_1171940_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>关于Qt</string>
    </property>
   </action>
   <action name="actionuserInfo">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/group.png</normaloff>:/mainWin/Icon/group.png</iconset>
+   </property>
    <property name="text">
     <string>用户信息</string>
    </property>
   </action>
   <action name="actionloginOut">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Logout_225px_1198327_easyicon.net.png</normaloff>:/mainWin/Icon/Logout_225px_1198327_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>登出</string>
    </property>
   </action>
   <action name="actionshow_control_widget">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Browser_tool_485px_1191946_easyicon.net.png</normaloff>:/mainWin/Icon/Browser_tool_485px_1191946_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>数据操作</string>
    </property>
   </action>
   <action name="actionshow_search_widget">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/mainWin/Icon/Magnify_query_256px_1194075_easyicon.net.png</normaloff>:/mainWin/Icon/Magnify_query_256px_1194075_easyicon.net.png</iconset>
+   </property>
    <property name="text">
     <string>查询窗口</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

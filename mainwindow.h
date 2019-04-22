@@ -11,6 +11,9 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QDateTime>
+#include <QMediaPlayer>
+#include <QMediaContent>
+#include <QSound>
 
 
 #include "dbconnt.h"
@@ -66,6 +69,10 @@ private:
     GroupMainWindow * grpmain;
 
     QLabel * currentTimeLabel;
+
+    QLabel * lab;
+
+    QMediaPlayer * play;
 };
 
 #endif // MAINWINDOW_H

@@ -9,5 +9,12 @@
         <file>Icon/data_new_query_sql_16px_2871_easyicon.net.png</file>
         <file>Icon/Browser_tool_485px_1191946_easyicon.net.png</file>
         <file>Icon/Magnify_query_256px_1194075_easyicon.net.png</file>
+        <file>background/73e20e8833c166ef212f22fc6a5d5a83.png</file>
+        <file>Icon/query_search_40px_1135839_easyicon.net.png</file>
+        <file>Icon/Inbox_Empty_512px_1177992_easyicon.net.png</file>
+        <file>Music/RyanAmon-LullabyforMergo.wav</file>
+        <file>Icon/about_1102px_1143785_easyicon.net.png</file>
+        <file>Icon/Logout_225px_1198327_easyicon.net.png</file>
+        <file>Icon/assistant_qt_256px_1171940_easyicon.net.png</file>
     </qresource>
 </RCC>

@@ -31,6 +31,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this->timer,&QTimer::timeout,this,&MainWindow::timeUpdate);
     ui->statusBar->addWidget(this->currentTimeLabel);
     this->timer->start(1000);
+    QPushButton *bt =new QPushButton(this);
+    this->ui->statusBar->addWidget(bt);
+    bt->setFlat(true);
+    connect(bt,&QPushButton::clicked,this,[=](){
+       QMessageBox::information(NULL,NULL,"Hear me! King of Infinite Space! Planetmover! The Foundation of Fastness! Ruler of Earthquakes! The Vanquisher of Terror! The Creator of Panic! Destroyer! The Shining Victor! Son of Chaos and the Void! The Guardian of the Abyss! God of the Outermost Darkness! Lord of Dimensions! Riddle-knower! Guardian of The Secrets! Lord of the Labyrinth! Master of the Angles! God of the Whiporwills! Omegapoint! Lord of the Gate! Opener of the Way! The Oldest! All-in-One! The One by Life Prolonged! Umr At-Tawil! Iak-Sathath! Yog Sothoth NAFL'FTHAGN!!! Your servant call upon you!");
+//        this->play = new QMediaPlayer(this);
+//        play->setMedia(QMediaContent(QUrl::fromLocalFile(":/mainWin/Music/RyanAmon-LullabyforMergo.wav")));
+//        play->setVolume(30);
+//        play->play();
+        QSound * star = new QSound(":/mainWin/Music/RyanAmon-LullabyforMergo.wav",this);
+        star->play();
+    });
 }
 
 MainWindow::~MainWindow()
@@ -202,4 +214,5 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     {
         return MainWindow::eventFilter(watched,event);
     }
+
 }

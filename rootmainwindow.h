@@ -45,6 +45,7 @@ private:
     teacher * tch;
     group * grp;
     user * us;
+    user * infoUs;
     department * dpment;
     studentDependence * studpdence;
     student * stu;

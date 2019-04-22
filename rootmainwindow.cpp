@@ -8,6 +8,7 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->us = new user();
+    this->infoUs = new user();
     this->db = new DBconnt();
     this->tch = new teacher();
     this->grp = new group();
@@ -27,7 +28,7 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
         QMessageBox::aboutQt(this);
     });
     connect(ui->actionuserInfo,&QAction::triggered,this,[=](){
-        QString info = QString("用户名：%1\n\n用户类型:管理员").arg(this->us->getUserName());
+        QString info = QString("用户名：%1\n\n用户类型:管理员").arg(this->infoUs->getUserName());
         QMessageBox::information(this,"用户信息",info);
     });
     connect(ui->actionloginOut,&QAction::triggered,this,[=](){
@@ -65,6 +66,7 @@ RootMainWindow::~RootMainWindow()
     delete this->tch;
     delete this->db;
     delete this->us;
+    delete this->infoUs;
 }
 
 void RootMainWindow::setMarginSpacing()
@@ -292,12 +294,16 @@ void RootMainWindow::setSearchWidget()
 
 void RootMainWindow::getUserInfo(user & us)
 {
-    *(this->us) = us;
-    if(this->us->getUserName()=="root")
+    *(this->infoUs) = us;
+    if(this->infoUs->getUserName()=="root")
     {
         this->isRoot = true;
+        this->setWindowTitle(QString("%1 [ROOT管理员] - 学生社团管理系统").arg(this->infoUs->getUserName()));
     }
-    this->setWindowTitle(QString("%1 [管理员] - 学生社团管理系统").arg(this->us->getUserName()));
+    else
+    {
+        this->setWindowTitle(QString("%1 [管理员] - 学生社团管理系统").arg(this->infoUs->getUserName()));
+    }
     setGroupModel();
     setUserModel();
     setStuModel();
