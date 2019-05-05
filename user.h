@@ -10,7 +10,7 @@ class user : public QObject
 {
     Q_OBJECT
 public:
-    //explicit user(QObject *parent = 0);
+    explicit user(QObject *parent = 0);
     user();
     user(int userID, QString userName, QString userPasswd,int userType); //构造函数
     ~user();    //析构函数

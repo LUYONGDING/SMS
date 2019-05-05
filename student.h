@@ -9,7 +9,7 @@ class student : public QObject
 {
     Q_OBJECT
 public:
-    //explicit student(QObject *parent = 0);
+    explicit student(QObject *parent = 0);
     student();
     student(int studentID, bool studentSex, QString studentName);   //带参构造函数
     ~student();

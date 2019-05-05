@@ -1,9 +1,47 @@
 ﻿#include "dbconnt.h"
 
-//DBconnt::DBconnt(QObject *parent) : QObject(parent)
-//{
+DBconnt::DBconnt(QObject *parent) : QObject(parent)
+{
+#if debug_mode
+    qDebug()<<"DBconnt::DBconnt()";  //输出：构造函数名
+#endif
 
-//}
+    QTextCodec * codec = QTextCodec::codecForName("UTF-8");  //设置字符集
+    QTextCodec::setCodecForLocale(codec);
+
+    //!设置数据库参数
+//    this->HostName = "127.0.0.1";
+//    this->UserName = "root";
+//    this->Password = "root";
+//    this->DatabaseName = "group_manager_system";
+//    this->Port = 3306;
+    readConfig();
+
+
+#if debug_mode
+    qDebug() << QSqlDatabase::drivers();    //输出：可以使用哪种数据库
+#endif
+
+    this->db = new QSqlDatabase();
+    *(this->db) = QSqlDatabase::addDatabase("QMYSQL"); //载入MySQL数据库驱动
+
+    //this->db = QSqlDatabase::addDatabase("QMYSQL");
+
+    this->db->setHostName(this->HostName);    //设置数据库地址
+    this->db->setUserName(this->UserName); //数据库用户名
+    this->db->setPassword(this->Password); //数据库密码
+    this->db->setDatabaseName(this->DatabaseName);   //数据库名字
+    this->db->setPort(this->Port);
+
+//    if(!this->db->open())
+//    {
+//        qDebug() << this->db->lastError().text();
+//        return;
+//    }
+//#if debug_mode
+//    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
+//#endif
+}
 
 DBconnt::DBconnt()  //构造函数
 {
@@ -178,4 +216,5 @@ int DBconnt::readConfig()
            }
         }
     }
+    return 1;
 }

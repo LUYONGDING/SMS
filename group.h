@@ -10,7 +10,7 @@ class group : public QObject
 {
     Q_OBJECT
 public:
-    //explicit group(QObject *parent = 0);
+    explicit group(QObject *parent = 0);
     group();
     group(user * user, QString groupName, teacher * thr, int groupType);
     ~group();

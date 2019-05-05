@@ -7,11 +7,11 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->us = new user();
-    this->db = new DBconnt();
-    this->tch = new teacher();
-    this->grp = new group();
-    this->dpment = new department();
+    this->us = new user(this);
+    this->db = new DBconnt(this);
+    this->tch = new teacher(this);
+    this->grp = new group(this);
+    this->dpment = new department(this);
     this->mainTableView = new QSqlQueryModel(this);
     this->MainTableView = NULL;
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
@@ -63,10 +63,10 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
 
 TeacherMainWindow::~TeacherMainWindow()
 {
-    delete this->db;
-    delete this->tch;
-    delete this->grp;
-    delete this->us;
+//    delete this->db;
+//    delete this->tch;
+//    delete this->grp;
+//    delete this->us;
     delete ui;
 }
 void TeacherMainWindow::setMarginSpacing()

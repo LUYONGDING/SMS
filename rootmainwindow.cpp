@@ -7,12 +7,12 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->us = new user();
-    this->infoUs = new user();
-    this->db = new DBconnt();
-    this->tch = new teacher();
-    this->grp = new group();
-    this->dpment = new department();
+    this->us = new user(this);
+    this->infoUs = new user(this);
+    this->db = new DBconnt(this);
+    this->tch = new teacher(this);
+    this->grp = new group(this);
+    this->dpment = new department(this);
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     setMarginSpacing();
@@ -61,12 +61,12 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
 RootMainWindow::~RootMainWindow()
 {
     delete ui;
-    delete this->dpment;
-    delete this->grp;
-    delete this->tch;
-    delete this->db;
-    delete this->us;
-    delete this->infoUs;
+//    delete this->dpment;
+//    delete this->grp;
+//    delete this->tch;
+//    delete this->db;
+//    delete this->us;
+//    delete this->infoUs;
 }
 
 void RootMainWindow::setMarginSpacing()

@@ -1,9 +1,9 @@
 #include "root.h"
 
-//root::root(QObject *parent) : QObject(parent)
-//{
+root::root(QObject *parent) : QObject(parent)
+{
 
-//}
+}
 
 root::root(){}//无参构造函数
 root::root(int rootID,

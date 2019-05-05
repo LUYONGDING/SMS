@@ -10,7 +10,7 @@ class department : public QObject
 {
     Q_OBJECT
 public:
-    //explicit department(QObject *parent = 0);
+    explicit department(QObject *parent = 0);
     department();
     department(int departmentID, const group * gp, QString departmentName, QString departmentIntroduction);
     ~department();

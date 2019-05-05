@@ -1,9 +1,9 @@
 #include "department.h"
 
-//department::department(QObject *parent) : QObject(parent)
-//{
+department::department(QObject *parent) : QObject(parent)
+{
 
-//}
+}
 department::department(){}
 department::department(int departmentID, const group * gp, QString departmentName, QString departmentIntroduction)
 {

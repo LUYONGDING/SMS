@@ -5,8 +5,8 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::selectTeacherForm)
 {
-    this->db = new DBconnt();
-    this->tch = new teacher();
+    this->db = new DBconnt(this);
+    this->tch = new teacher(this);
     ui->setupUi(this);
 //    this->setAttribute(Qt::WA_DeleteOnClose);
     ui->comboBox_search->addItem("ID");

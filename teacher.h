@@ -10,7 +10,7 @@ class teacher : public QObject
 {
     Q_OBJECT
 public:
-    //explicit teacher(QObject *parent = 0);
+    explicit teacher(QObject *parent = 0);
     teacher();  //无参构造
     teacher(int teacherID,
     user * us,

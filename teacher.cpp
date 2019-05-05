@@ -1,9 +1,9 @@
 #include "teacher.h"
 
-//teacher::teacher(QObject *parent) : QObject(parent)
-//{
+teacher::teacher(QObject *parent) : QObject(parent)
+{
 
-//}
+}
 teacher::teacher(){} //无参构造
 teacher::teacher(int teacherID,
 user * us,

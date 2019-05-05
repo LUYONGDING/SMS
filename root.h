@@ -10,7 +10,7 @@ class root : public QObject
 {
     Q_OBJECT
 public:
-//    explicit root(QObject *parent = 0);
+    explicit root(QObject *parent = 0);
     root(); //无参构造函数
     root(int rootID,
     user * us,

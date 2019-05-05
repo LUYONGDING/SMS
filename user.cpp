@@ -1,9 +1,9 @@
 ﻿#include "user.h"
 
-//user::user(QObject *parent) : QObject(parent)
-//{
+user::user(QObject *parent) : QObject(parent)
+{
 
-//}
+}
 
 user::user(){}
 user::user(int userID, QString userName, QString userPasswd, int userType)

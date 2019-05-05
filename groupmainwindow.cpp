@@ -7,10 +7,10 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->db = new DBconnt();
-    this->us = new user();
-    this->grp = new group();
-    this->dpment = new department();
+    this->db = new DBconnt(this);
+    this->us = new user(this);
+    this->grp = new group(this);
+    this->dpment = new department(this);
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     this->mainTableView = new QSqlQueryModel(this);
@@ -53,10 +53,10 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
 
 GroupMainWindow::~GroupMainWindow()
 {
-    delete this->db;
-    delete this->us;
-    delete this->grp;
-    delete this->dpment;
+//    delete this->db;
+//    delete this->us;
+//    delete this->grp;
+//    delete this->dpment;
     delete ui;
 }
 void GroupMainWindow::getUserInfo(user & us)

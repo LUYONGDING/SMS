@@ -6,11 +6,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->db = new DBconnt();
+    this->db = new DBconnt(this);
 //    qDebug() << this->db->getDBinfo();
     this->setMouseTracking(true);
 
-    this->us = new user();
+    this->us = new user(this);
 
     this->setWindowTitle("学生社团管理系统");   //设置窗口标题
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
@@ -47,29 +47,29 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    if(NULL == this->db)
-    {
-        delete db;
-        db = NULL;
-    }
+//    if(NULL == this->db)
+//    {
+//        delete db;
+//        db = NULL;
+//    }
 //    if(NULL == this->regist)
 //    {
 //        delete regist;
 //        regist = NULL;
 //    }
-    delete this->us;
-    if(this->tchmain!=NULL)
-    {
-        delete this->tchmain;
-    }
-    if(this->rtmain!=NULL)
-    {
-        delete this->rtmain;
-    }
-    if(this->grpmain!=NULL)
-    {
-        delete this->grpmain;
-    }
+//    delete this->us;
+//    if(this->tchmain!=NULL)
+//    {
+//        delete this->tchmain;
+//    }
+//    if(this->rtmain!=NULL)
+//    {
+//        delete this->rtmain;
+//    }
+//    if(this->grpmain!=NULL)
+//    {
+//        delete this->grpmain;
+//    }
     delete ui;
 }
 void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景

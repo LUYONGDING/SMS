@@ -1,10 +1,11 @@
 ﻿#include "group.h"
 
 
-//group::group(QObject *parent = 0) : QObject(parent)
-//{
+group::group(QObject *parent) : QObject(parent)
+{
 
-//}
+}
+
 group::group(){}
 group::group(user * user, QString groupName, teacher * thr, int groupType)
 {

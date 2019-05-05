@@ -14,10 +14,10 @@ registForm::registForm(QWidget *parent) :
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
 
 
-    this->db = new DBconnt();   //初始化数据库类
-    this->us = new user();  //初始化用户类
-    this->tch = new teacher();  //初始化教师类
-    this->grp = new group();
+    this->db = new DBconnt(this);   //初始化数据库类
+    this->us = new user(this);  //初始化用户类
+    this->tch = new teacher(this);  //初始化教师类
+    this->grp = new group(this);
     this->rx.setPattern(QString("^[A-Za-z0-9]+$")); //设置密码格式为数字与大小写字母
     //加入教师按钮组
     this->btnGroup.addButton(ui->radioButton_male,1);
@@ -95,19 +95,19 @@ registForm::registForm(QWidget *parent) :
 
 registForm::~registForm()
 {
-    if(NULL != db)
-    {
-        delete db;
-        db = NULL;
-    }
-    if(NULL != us)
-    {
-        delete us;
-    }
-    if(NULL != tch)
-    {
-        delete tch;
-    }
+//    if(NULL != db)
+//    {
+//        delete db;
+//        db = NULL;
+//    }
+//    if(NULL != us)
+//    {
+//        delete us;
+//    }
+//    if(NULL != tch)
+//    {
+//        delete tch;
+//    }
     delete ui;
 }
 void registForm::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
