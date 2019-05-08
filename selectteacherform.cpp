@@ -47,14 +47,14 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
 
 selectTeacherForm::~selectTeacherForm()
 {
-    if(this->db != NULL)
-    {
-        delete this->db;
-    }
-    if(this->tch != NULL)
-    {
-        delete this->tch;
-    }
+//    if(this->db != NULL)
+//    {
+//        delete this->db;
+//    }
+//    if(this->tch != NULL)
+//    {
+//        delete this->tch;
+//    }
     delete ui;
 }
 void selectTeacherForm::paintEvent(QPaintEvent *event)

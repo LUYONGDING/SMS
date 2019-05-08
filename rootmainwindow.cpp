@@ -13,6 +13,7 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     this->tch = new teacher(this);
     this->grp = new group(this);
     this->dpment = new department(this);
+    this->stu = new student(this);
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     setMarginSpacing();
