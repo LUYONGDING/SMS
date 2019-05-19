@@ -38,10 +38,10 @@ public:
 
 protected:
 private:
-    int rootID;
-    int rootUserID;
-    QString rootName;
-    bool rootSex;
+    int rootID; //管理员ID
+    int rootUserID; //管理员用户ID
+    QString rootName;   //管理员姓名
+    bool rootSex;   //管理员性别
 
 signals:
 

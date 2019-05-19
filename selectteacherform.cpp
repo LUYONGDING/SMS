@@ -62,6 +62,7 @@ void selectTeacherForm::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
     event->accept();
+    return QWidget::paintEvent(event);
 }
 void selectTeacherForm::slotRowDoubleClicked(const QModelIndex & index)
 {

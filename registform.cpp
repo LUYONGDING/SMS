@@ -1,6 +1,7 @@
 #include "registform.h"
 #include "ui_registform.h"
 
+
 registForm::registForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::registForm)
@@ -114,6 +115,7 @@ void registForm::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
 {
     QPainter painter(this);
     painter.drawPixmap(0,0,610,610,QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
+    return QWidget::paintEvent(event);
 }
 void registForm::SetNULLTeacherEdit()
 {

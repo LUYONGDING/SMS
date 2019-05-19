@@ -33,31 +33,32 @@ class GroupMainWindow : public QMainWindow
 public:
     explicit GroupMainWindow(QWidget *parent = 0);
     ~GroupMainWindow();
-    void paintEvent(QPaintEvent *event);
+protected:
+    void paintEvent(QPaintEvent *event);    //绘图事件
 private:
     Ui::GroupMainWindow *ui;
-    DBconnt * db;
-    user * us;
-    group * grp;
-    department * dpment;
-    student * stu;
-    studentDependence * studpence;
-    QStandardItemModel * model;
-    QSqlQueryModel * mainTableView;
-    QSqlRelationalTableModel * RMainTableView;
-    QPainter * painter;
-    QTimer * timer;
-    QLabel * currentTimeLabel;
-    void setMarginSpacing();
-    void setGroupModel();
+    DBconnt * db;   //数据库操作成员
+    user * us;  //用户类成员
+    group * grp;    //机构/社团类成员
+    department * dpment;    //部门类成员
+    student * stu;  //学生类成员
+    studentDependence * studpence;  //学生从属类成员
+    QStandardItemModel * model; //标准Model
+    QSqlQueryModel * mainTableView; //数据库查询Model成员
+    QSqlRelationalTableModel * RMainTableView;  //关系数据库查询Model成员
+    QPainter * painter; //绘图成员
+    QTimer * timer; //定时器成员
+    QLabel * currentTimeLabel;  //显示时间QLabel成员
+    void setMarginSpacing();    //设置各控件Margin与Spacing函数
+    void setGroupModel();   //设置树视图函数
 signals:
-    void sendOpenInfo(QStringList list);
-    void loginOut();
+    void sendOpenInfo(QStringList list);    //打开表信息的信号
+    void loginOut();    //登出信号
 public slots:
-    void getUserInfo(user & us);
-    void CustomContextMenu(const QPoint &);
-    void opendpmentTableView(QStringList list);
-    void openTableViewByDC(const QModelIndex & index);
+    void getUserInfo(user & us);    //获得用户信息的槽函数
+    void CustomContextMenu(const QPoint &); //树视图右键菜单槽函数
+    void opendpmentTableView(QStringList list); //打开部门表的槽函数
+    void openTableViewByDC(const QModelIndex & index);  //双击打开部门表的槽函数
 };
 
 #endif // GROUPMAINWINDOW_H

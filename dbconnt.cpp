@@ -2,9 +2,6 @@
 
 DBconnt::DBconnt(QObject *parent) : QObject(parent)
 {
-#if debug_mode
-    qDebug()<<"DBconnt::DBconnt()";  //输出：构造函数名
-#endif
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");  //设置字符集
     QTextCodec::setCodecForLocale(codec);
@@ -17,10 +14,6 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent)
 //    this->Port = 3306;
     readConfig();
 
-
-#if debug_mode
-    qDebug() << QSqlDatabase::drivers();    //输出：可以使用哪种数据库
-#endif
 
     this->db = new QSqlDatabase();
     *(this->db) = QSqlDatabase::addDatabase("QMYSQL"); //载入MySQL数据库驱动
@@ -46,9 +39,6 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent)
 DBconnt::DBconnt()  //构造函数
 {
 
-#if debug_mode
-    qDebug()<<"DBconnt::DBconnt()";  //输出：构造函数名
-#endif
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");  //设置字符集
     QTextCodec::setCodecForLocale(codec);
@@ -61,10 +51,6 @@ DBconnt::DBconnt()  //构造函数
 //    this->Port = 3306;
     readConfig();
 
-
-#if debug_mode
-    qDebug() << QSqlDatabase::drivers();    //输出：可以使用哪种数据库
-#endif
 
     this->db = new QSqlDatabase();
     *(this->db) = QSqlDatabase::addDatabase("QMYSQL"); //载入MySQL数据库驱动
@@ -82,26 +68,17 @@ DBconnt::DBconnt()  //构造函数
 //        qDebug() << this->db->lastError().text();
 //        return;
 //    }
-//#if debug_mode
-//    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
-//#endif
+
 }
 
 DBconnt::~DBconnt()
 {
-
-#if debug_mode
-    qDebug() << "DBconnt::~DBconnt()";  //输出：析构函数名
-#endif
 
     if(NULL != this->query)
     {
         delete this->query;
         this->query = NULL;
 
-#if debug_mode
-        qDebug()<<"delete query";   //输出：释放query的空间
-#endif
     }
 
     this->db->close();   //关闭数据库
@@ -110,10 +87,6 @@ DBconnt::~DBconnt()
     {
         delete this->db;
         this->db = NULL;
-
-#if debug_mode
-        qDebug()<<"delete db";   //输出：释放db的空间
-#endif
     }
 }
 

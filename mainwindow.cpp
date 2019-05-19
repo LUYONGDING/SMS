@@ -76,6 +76,7 @@ void MainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
 {
     QPainter painter(this);
     painter.drawPixmap(0,0,520,520,QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
+    return QMainWindow::paintEvent(event);
 }
 
 void MainWindow::userLogin()    //登陆槽函数

@@ -96,7 +96,7 @@ void RootMainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
-
+    return QMainWindow::paintEvent(event);
 }
 
 void RootMainWindow::setUserModel()
@@ -176,7 +176,7 @@ void RootMainWindow::setGroupModel()
         this->grp->setGroupType(this->db->query->value("group_type").toInt());
         if(0==this->grp->getGroupType())   //学生机构
         {
-            QStandardItem * group_0 = new QStandardItem(QString("%1-[学生机构]").arg(this->grp->getGroupName()));
+            QStandardItem * group_0 = new QStandardItem(QString("%1-[学生机构]-%2").arg(this->grp->getGroupName()).arg(this->grp->getGroupID()));
             item0->appendRow(group_0);
             QSqlQuery queryForGroup_0;
             queryForGroup_0.prepare("SELECT * FROM `department` WHERE `department_group_id` = :ID");
@@ -194,13 +194,13 @@ void RootMainWindow::setGroupModel()
                 this->dpment->setDepartmentGroupID(queryForGroup_0.value("department_group_id").toInt());
                 this->dpment->setDepartmentName(queryForGroup_0.value("department_name").toString());
                 this->dpment->setDepartmentIntroduction(queryForGroup_0.value("department_introdution").toString());
-                QStandardItem * dpment_0 = new QStandardItem(QString("%1-[部门]").arg(this->dpment->getDepartmentName()));
+                QStandardItem * dpment_0 = new QStandardItem(QString("%1-[部门]-%2").arg(this->dpment->getDepartmentName()).arg(this->dpment->getDepartmentID()));
                 group_0->appendRow(dpment_0);
             }
         }
         if(1==this->grp->getGroupType())
         {
-            QStandardItem * group_1 = new QStandardItem(QString("%1-[学生社团]").arg(this->grp->getGroupName()));
+            QStandardItem * group_1 = new QStandardItem(QString("%1-[学生社团]-%2").arg(this->grp->getGroupName()).arg(this->grp->getGroupID()));
             item1->appendRow(group_1);
             QSqlQuery queryForGroup_1;
             queryForGroup_1.prepare("SELECT * FROM `department` WHERE `department_group_id` = :ID");
@@ -218,7 +218,7 @@ void RootMainWindow::setGroupModel()
                 this->dpment->setDepartmentGroupID(queryForGroup_1.value("department_group_id").toInt());
                 this->dpment->setDepartmentName(queryForGroup_1.value("department_name").toString());
                 this->dpment->setDepartmentIntroduction(queryForGroup_1.value("department_introdution").toString());
-                QStandardItem * dpment_1 = new QStandardItem(QString("%1-[部门]").arg(this->dpment->getDepartmentName()));
+                QStandardItem * dpment_1 = new QStandardItem(QString("%1-[部门]-%2").arg(this->dpment->getDepartmentName()).arg(this->dpment->getDepartmentID()));
                 group_1->appendRow(dpment_1);
             }
         }
@@ -231,7 +231,7 @@ void RootMainWindow::setGroupModel()
 
 void RootMainWindow::setStuModel()
 {
-    bool ret = false;
+//    bool ret = false;
     this->stuModel = new QStandardItemModel(this);
     ui->treeView_student->setEditTriggers(0);
     ui->treeView_student->header()->hide();
@@ -243,7 +243,7 @@ void RootMainWindow::setStuModel()
 
 void RootMainWindow::setTchModel()
 {
-    bool ret = false;
+//    bool ret = false;
     this->tchModel = new QStandardItemModel(this);
     ui->treeView_teacher->setEditTriggers(0);
     ui->treeView_teacher->header()->hide();
@@ -409,7 +409,7 @@ void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)
 {
     QModelIndex index = ui->treeView_student->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_student);
-    QStandardItem * tmpItem = this->stuModel->itemFromIndex(index);
+//    QStandardItem * tmpItem = this->stuModel->itemFromIndex(index);
     QAction * reflash = new QAction(this);
     reflash->setText("刷新");
     connect(reflash,&QAction::triggered,this,&RootMainWindow::setStuModel);
@@ -427,7 +427,7 @@ void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)
 {
     QModelIndex index = ui->treeView_teacher->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_teacher);
-    QStandardItem * tmpItem = this->tchModel->itemFromIndex(index);
+//    QStandardItem * tmpItem = this->tchModel->itemFromIndex(index);
     QAction * reflash = new QAction(this);
     reflash->setText("刷新");
     connect(reflash,&QAction::triggered,this,&RootMainWindow::setTchModel);

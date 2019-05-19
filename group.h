@@ -15,7 +15,7 @@ public:
     group(user * user, QString groupName, teacher * thr, int groupType);
     ~group();
 
-    //设置和获得成员属性接口
+    //设置和获得成员属性方法
     void setGroupID(user * user);
     void setGroupID(int ID);
     void setGroupName(QString groupName);

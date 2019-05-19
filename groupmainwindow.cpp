@@ -6,7 +6,8 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
     ui(new Ui::GroupMainWindow)
 {
     ui->setupUi(this);
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setAttribute(Qt::WA_DeleteOnClose);   //设置关闭窗口时销毁窗口
+    //为成员开辟空间
     this->db = new DBconnt(this);
     this->us = new user(this);
     this->grp = new group(this);
@@ -14,21 +15,29 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     this->mainTableView = new QSqlQueryModel(this);
-    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
-    setMarginSpacing();
+
+    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
+
+    setMarginSpacing(); //设置控件Margin与Spacing
+    //去掉部件的标题栏
     QWidget * tempWidget = new QWidget(this);
     ui->dockWidget_left->setTitleBarWidget(tempWidget);
-    connect(this->ui->treeView,&QTreeView::doubleClicked,this,&GroupMainWindow::openTableViewByDC);
+
+    connect(this->ui->treeView,&QTreeView::doubleClicked,this,&GroupMainWindow::openTableViewByDC); //连接双击打开槽函数
+    //连接关于槽函数
     connect(this->ui->actionabout,&QAction::triggered,[=](){
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
         QMessageBox::about(this,"关于",about);
     });
+    //连接关于Qt槽函数
     connect(this->ui->actionaboutQt,&QAction::triggered,[=](){
         QMessageBox::aboutQt(this);
     });
+    //连接用户信息槽函数
     connect(this->ui->actionuserInfo,&QAction::triggered,[=](){
         QMessageBox::information(this,"用户信息",QString("用户名：%1\n用户类型：%2").arg(this->us->getUserName()).arg("社团/机构"));
     });
+    //连接登出槽函数
     connect(this->ui->actionloginOut,&QAction::triggered,[=](){
         int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
         if(lgnout==QMessageBox::Yes)
@@ -42,6 +51,7 @@ GroupMainWindow::GroupMainWindow(QWidget *parent) :
             return;
         }
     });
+    //设置显示时间
     this->ui->statusbar->addWidget(this->currentTimeLabel);
     connect(this->timer,&QTimer::timeout,this,[=](){
         QDateTime current_time = QDateTime::currentDateTime();
@@ -59,7 +69,7 @@ GroupMainWindow::~GroupMainWindow()
 //    delete this->dpment;
     delete ui;
 }
-void GroupMainWindow::getUserInfo(user & us)
+void GroupMainWindow::getUserInfo(user & us)    //获得用户信息的槽函数
 {
     *(this->us) = us;
 //    qDebug()<<this->us->getinfo();
@@ -69,7 +79,7 @@ void GroupMainWindow::getUserInfo(user & us)
     return;
 }
 
-void GroupMainWindow::CustomContextMenu(const QPoint &pos)
+void GroupMainWindow::CustomContextMenu(const QPoint &pos)  //树视图右键菜单槽函数
 {
     QModelIndex index = ui->treeView->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView);
@@ -108,7 +118,7 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)
     tree_menu->exec(QCursor::pos());
 }
 
-void GroupMainWindow::opendpmentTableView(QStringList list)
+void GroupMainWindow::opendpmentTableView(QStringList list) //打开部门表的槽函数
 {
     this->dpment->setDepartmentName(list[0]);   //获取社团名
     int ret = false;
@@ -179,7 +189,7 @@ void GroupMainWindow::opendpmentTableView(QStringList list)
     return;
 }
 
-void GroupMainWindow::openTableViewByDC(const QModelIndex &index)
+void GroupMainWindow::openTableViewByDC(const QModelIndex &index)   //双击打开部门表的槽函数
 {
     QStandardItem * item = model->itemFromIndex(index);
     QStringList list = item->text().split("-");
@@ -191,6 +201,7 @@ void GroupMainWindow::paintEvent(QPaintEvent *event)
 {
     painter = new QPainter(this);
     painter->drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
+    return QMainWindow::paintEvent(event);
 }
 void GroupMainWindow::setMarginSpacing()
 {
@@ -204,7 +215,7 @@ void GroupMainWindow::setMarginSpacing()
     this->ui->widget->layout()->setSpacing(0);
 }
 
-void GroupMainWindow::setGroupModel()
+void GroupMainWindow::setGroupModel()   //设置树视图函数
 {
     bool ret = 0;
     this->model = new QStandardItemModel(ui->tableView);
@@ -233,7 +244,7 @@ void GroupMainWindow::setGroupModel()
         this->db->closeDB();
         return;
     }
-    QStandardItem * item = new QStandardItem(QString("%1-[我的社团]").arg(this->grp->getGroupName()));
+    QStandardItem * item = new QStandardItem(QString("%1-[我的社团]-%2").arg(this->grp->getGroupName()).arg(this->grp->getGroupID()));
     this->db->query->prepare("SELECT * FROM `department` WHERE `department_group_id` = :ID");
     this->db->query->bindValue(":ID",this->grp->getGroupID());
     ret = this->db->query->exec();
@@ -249,7 +260,7 @@ void GroupMainWindow::setGroupModel()
         this->dpment->setDepartmentID(this->db->query->value("department_id").toInt());
         this->dpment->setDepartmentName(this->db->query->value("department_name").toString());
         this->dpment->setDepartmentIntroduction(this->db->query->value("department_introdution").toString());
-        QStandardItem * my_dpment = new QStandardItem(QString("%1-[部门]").arg(this->dpment->getDepartmentName()));
+        QStandardItem * my_dpment = new QStandardItem(QString("%1-[部门]-%2").arg(this->dpment->getDepartmentName()).arg(this->dpment->getDepartmentID()));
         item->appendRow(my_dpment);
     }
     this->model->appendRow(item);

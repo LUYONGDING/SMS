@@ -105,6 +105,7 @@ void TeacherMainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设�
 {
     QPainter painter(this);
     painter.drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
+    return QMainWindow::paintEvent(event);
 }
 
 void TeacherMainWindow::getUserInfo(user & us){ //获得登陆用户的槽函数
@@ -174,11 +175,11 @@ void TeacherMainWindow::setGroupModel()
             this->grp->getinfo();
             if(this->grp->getGroupType()==0)
             {
-                group_str = QString("%1-[%2]").arg(this->grp->getGroupName()).arg("学生机构");
+                group_str = QString("%1-[%2]-%3").arg(this->grp->getGroupName()).arg("学生机构").arg(this->grp->getGroupID());
             }
             else if(this->grp->getGroupType()==1)
             {
-                group_str = QString("%1-[%2]").arg(this->grp->getGroupName()).arg("学生社团");
+                group_str = QString("%1-[%2]-%3").arg(this->grp->getGroupName()).arg("学生社团").arg(this->grp->getGroupID());
             }
             QStandardItem * my_group = new QStandardItem(group_str);
             item->appendRow(my_group);
@@ -197,9 +198,10 @@ void TeacherMainWindow::setGroupModel()
                 while(query.next())
                 {
                     this->dpment->setDepartmentGroupID(query.value("department_group_id").toInt());
+                    this->dpment->setDepartmentID(query.value("department_id").toInt());
                     this->dpment->setDepartmentName(query.value("department_name").toString());
                     this->dpment->setDepartmentIntroduction(query.value("department_introdution").toString());
-                    QStandardItem * group_dpment = new QStandardItem(QString("%1-[%2]").arg(this->dpment->getDepartmentName()).arg("部门"));
+                    QStandardItem * group_dpment = new QStandardItem(QString("%1-[%2]-%3").arg(this->dpment->getDepartmentName()).arg("部门").arg(this->dpment->getDepartmentID()));
                     my_group->appendRow(group_dpment);
                     this->dpment->getInfo();
                 }

@@ -28,14 +28,15 @@ class selectTeacherForm : public QWidget
 public:
     explicit selectTeacherForm(QWidget *parent = 0);
     ~selectTeacherForm();
-    void paintEvent(QPaintEvent * event);
+protected:
+    void paintEvent(QPaintEvent * event);   //绘图事件
 signals:
-    void selectedID(QString & ID);
+    void selectedID(QString & ID);  //选择ID信号
 public slots:
-    void slotRowDoubleClicked(const QModelIndex & index);
+    void slotRowDoubleClicked(const QModelIndex & index);   //双击槽函数
 private slots:
-    void searchTeacher();
-    void returnTeacherID();
+    void searchTeacher();   //查询教师ID槽函数
+    void returnTeacherID(); //返回教师ID槽函数
 private:
     Ui::selectTeacherForm *ui;
     DBconnt * db;   //数据库类

@@ -35,8 +35,8 @@ public:
     void SetNULLGroupEdit();    //置空社团注册控件
     bool teacherRegistCheck(); //注册前检查
     bool groupRegistCheck(); //注册前检查
-    void paintEvent(QPaintEvent *event);
-    void closeEvent(QCloseEvent *event);
+    void paintEvent(QPaintEvent *event);    //绘图事件
+    void closeEvent(QCloseEvent *event);    //关闭事件
 public slots:
 signals:
 private:
@@ -49,7 +49,7 @@ private:
     QButtonGroup btnGroup2; //用于社团与机构的radio按钮组
     QRegExp rx; //用于检测密码是否符合规则
 
-    selectTeacherForm * sltTeacher;
+    selectTeacherForm * sltTeacher; //选择教师窗口成员
 
 };
 

@@ -42,37 +42,39 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+protected:
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
+private:
+    Ui::MainWindow *ui;
+
+    DBconnt * db;   //数据库类成员
+
+    registForm * regist;    //注册窗口成员
+
+    user * us;  //用户类成员
+
+    QTimer * timer; //计时器成员
+
+    TeacherMainWindow * tchmain;    //教师主界面成员
+
+    RootMainWindow * rtmain;    //管理员主界面成员
+
+    GroupMainWindow * grpmain;  //社团主界面成员
+
+    QLabel * currentTimeLabel;  //显示时间QLabel
+
+    QLabel * lab;
+
+    QMediaPlayer * play;
 signals:
+    //登录用户信息的信号
     void sendUserInfo0(user & us);
     void sendUserInfo1(user & us);
     void sendUserInfo2(user & us);
 private slots:
     void userLogin();   //登录槽函数
-    void timeUpdate();
-private:
-    Ui::MainWindow *ui;
-
-    DBconnt * db;
-
-    registForm * regist;
-
-    user * us;
-
-    QTimer * timer;
-
-    TeacherMainWindow * tchmain;
-
-    RootMainWindow * rtmain;
-
-    GroupMainWindow * grpmain;
-
-    QLabel * currentTimeLabel;
-
-    QLabel * lab;
-
-    QMediaPlayer * play;
+    void timeUpdate();  //更新时间槽函数
 };
 
 #endif // MAINWINDOW_H
