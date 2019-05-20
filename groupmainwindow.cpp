@@ -96,20 +96,12 @@ void GroupMainWindow::CustomContextMenu(const QPoint &pos)  //树视图右键菜
         {
             QAction * openDpment = new QAction(this);
             openDpment->setText("打开");
-//            tree_menu->addAction("打开",this,[=](){
-//                emit sendOpenInfo(list);
-//            });
-//            connect(this,&GroupMainWindow::sendOpenInfo,this,&GroupMainWindow::opendpmentTableView);
             tree_menu->addAction(openDpment);
             connect(openDpment,&QAction::triggered,[=](){
                 connect(this,&GroupMainWindow::sendOpenInfo,this,&GroupMainWindow::opendpmentTableView);
                 emit sendOpenInfo(list);
             });
         }
-//        else
-//        {
-//            tree_menu->addAction("新增部门");
-//        }
     }
     else
     {
@@ -144,40 +136,12 @@ void GroupMainWindow::opendpmentTableView(QStringList list) //打开部门表的
         this->db->closeDB();
         return;
     }
-//    this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = :ID)");
-//    this->db->query->bindValue(":ID",this->dpment->getDepartmentID());
-//    ret = this->db->query->exec();
-//    if(!ret)
-//    {
-//        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
-//        this->db->closeDB();
-//        return;
-//    }
-//    if(this->db->query->next())
-//    {
-//        this->mainTableView->setQuery(*(this->db->query));
-//        this->mainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
-//        this->mainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
-//        this->mainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
-//        ui->tableView->setModel(this->mainTableView);
-//        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
-//        ui->tableView->show();
-//    }
-//    else
-//    {
-//        QMessageBox::information(NULL,"信息","没有成员");
-//        this->db->closeDB();
-//        return;
-//    }
-//    this->db->closeDB();
     this->RMainTableView = new QSqlRelationalTableModel(this);
     this->RMainTableView->setEditStrategy(QSqlTableModel::OnRowChange);
     this->RMainTableView->setTable("studentdependence");
     this->RMainTableView->setRelation(3,QSqlRelation("student","student_id","student_name"));
     this->RMainTableView->setRelation(1,QSqlRelation("department","department_id","department_name"));
     this->RMainTableView->setFilter(QString("studentdependence_department_id = %1").arg(this->dpment->getDepartmentID()));
-//    this->RMainTableView->removeColumn(2);
-//    this->RMainTableView->removeColumn(0);
     this->RMainTableView->select();
     this->RMainTableView->setHeaderData(0,Qt::Horizontal,"社团/机构ID");
     this->RMainTableView->setHeaderData(1,Qt::Horizontal,"所属部门（修改请输入部门ID）");
@@ -207,7 +171,6 @@ void GroupMainWindow::setMarginSpacing()
 {
     this->layout()->setSpacing(0);
     this->layout()->setMargin(0);
-//    this->ui->dockWidgetContents->layout()->setSpacing(0);
     this->ui->dockWidgetContents->layout()->setMargin(1);
     this->ui->centralwidget->layout()->setMargin(0);
     this->ui->centralwidget->layout()->setSpacing(0);

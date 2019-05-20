@@ -23,9 +23,6 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
     //设置各个框体的Margin与Spacing
     this->setMarginSpacing();
     ui->treeView_2->setContextMenuPolicy(Qt::CustomContextMenu);
-    //    this->actionopenGrpTableView = new QAction("打开",this->ui->treeView_2);
-    //    this->actionopendpmentTableView = new QAction("打开",this->ui->treeView_2);
-    //    this->actionopendpmentTableViewByGrp = new QAction("打开该部门所在的社团",this->ui->treeView_2);
     connect(ui->treeView_2,&QTreeView::doubleClicked,this,&TeacherMainWindow::openTableViewByDC);   //双击打开
     connect(ui->actionabout,&QAction::triggered,[=](){  //菜单关于选项
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
@@ -94,16 +91,12 @@ void TeacherMainWindow::setSearchWidget()   //设置查询部件
     if(this->controlInfo == "group")
     {
         this->ui->comboBox->addItem("部门ID");
-//        this->ui->comboBox->addItem("社团/机构ID");
         this->ui->comboBox->addItem("部门名称");
         this->ui->comboBox->addItem("部门简介");
     }
     else if(this->controlInfo == "department")
     {
-//        this->ui->comboBox->addItem("社团/机构ID");
-//        this->ui->comboBox->addItem("所属部门");
         this->ui->comboBox->addItem("归属ID");
-//        this->ui->comboBox->addItem("学生姓名");
     }
 }
 void TeacherMainWindow::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
@@ -216,14 +209,6 @@ void TeacherMainWindow::setGroupModel() //设置社团树视图
     model->appendRow(item);
     ui->treeView_2->setModel(model);
     this->db->closeDB();
-    //    QStandardItemModel * model = new QStandardItemModel(ui->treeView_2);
-    //    ui->treeView_2->setEditTriggers(0);
-    //    ui->treeView_2->header()->hide();
-    //    QStandardItem * item = new QStandardItem("我管理的社团");
-    //    QStandardItem * child = new QStandardItem("社团1");
-    //    item->appendRow(child);
-    //    model->appendRow(item);
-    //    ui->treeView_2->setModel(model);
 }
 void TeacherMainWindow::CustomContextMenu(const QPoint & pos)   //右键菜单
 {
@@ -237,8 +222,6 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)   //右键菜单
     connect(reflash,&QAction::triggered,this,&TeacherMainWindow::setGroupModel);
     if(index.isValid())
     {
-        //        qDebug()<<index.row()<<","<<index.column()<<"->"<<tmpItem->text();
-        //        qDebug()<<tmpItem->text();
         if(tmpItem->text() == "我管理的社团")
         {
             tree_menu->addAction(reflash);
@@ -250,18 +233,6 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)   //右键菜单
             //            qDebug()<<list[1];
             if(list[1] == "[学生机构]" || list[1] == "[学生社团]")
             {
-                //                QAction * openGrp = new QAction("打开",this);
-
-                //                tree_menu->addAction(openGrp);
-                //                connect(openGrp,&QAction::triggered,[=](){
-                //                    connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView);
-                //                    emit sendOpenInfo(list);
-                //                });
-
-                //                tree_menu->addAction("打开",[=](){
-                //                    emit sendOpenInfo(list);
-                //                });
-                //                connect(this,&TeacherMainWindow::sendOpenInfo,this,&TeacherMainWindow::openGrpTableView,Qt::UniqueConnection);
                 QAction * openGrp = new QAction(this);
                 openGrp->setText("打开");
                 tree_menu->addAction(openGrp);
@@ -279,12 +250,6 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)   //右键菜单
                     connect(this,&TeacherMainWindow::sendOpenInfo2,this,&TeacherMainWindow::opendpmentTableView,Qt::UniqueConnection);
                     emit sendOpenInfo2(list);
                 });
-                //                tree_menu->addAction("打开部门所在的社团",[=](){
-
-                //                    emit sendOpenInfo3(list);
-                //                });
-                //                connect(this,&TeacherMainWindow::sendOpenInfo3,this,&TeacherMainWindow::opendpmentTableViewByGrp,Qt::UniqueConnection);
-                //                tree_menu->addAction("刷新",this->ui->treeView_2,&TeacherMainWindow::setGroupModel);
                 QAction * openGrpByDpment = new QAction(this);
                 openGrpByDpment->setText("打开部门所在的社团");
                 tree_menu->addAction(openGrpByDpment);
@@ -339,40 +304,11 @@ void TeacherMainWindow::openGrpTableView(QStringList list)  //打开社团表
         this->db->closeDB();
         return;
     }
-    //    this->db->query->prepare("SELECT * FROM `department` WHERE `department_group_id` = :ID");
-    //    this->db->query->bindValue(":ID",this->grp->getGroupID());
-    //    ret = this->db->query->exec();
-    //    if(!ret)
-    //    {
-    //        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
-    //        this->db->closeDB();
-    //        return;
-    //    }
-    //    if(this->db->query->next())
-    //    {
-    //        this->mainTableView->setQuery(*(this->db->query));
-    //        this->mainTableView->removeColumn(0);
-    //        this->mainTableView->removeColumn(1);
-    //        this->mainTableView->setHeaderData(0,Qt::Horizontal,"部门名称");
-    //        this->mainTableView->setHeaderData(1,Qt::Horizontal,"部门简介");
-    //        ui->tableView->setModel(this->mainTableView);
-    //        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
-    //        ui->tableView->show();
-    //    }
-    //    else
-    //    {
-    //        QMessageBox::information(NULL,"信息","没有部门");
-    //        this->db->closeDB();
-    //        return;
-    //    }
 
     this->MainTableView = new QSqlTableModel(this);
-
     this->MainTableView->setTable("department");
     this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
     this->MainTableView->setFilter(QString("department_group_id = %1").arg(this->grp->getGroupID()));
-    //    this->MainTableView->removeColumn(1);
-    //    this->MainTableView->removeColumn(0);
     this->MainTableView->setHeaderData(0,Qt::Horizontal,"部门ID");
     this->MainTableView->setHeaderData(1,Qt::Horizontal,"社团/机构ID");
     this->MainTableView->setHeaderData(2,Qt::Horizontal,"部门名称");
@@ -381,7 +317,6 @@ void TeacherMainWindow::openGrpTableView(QStringList list)  //打开社团表
     ui->tableView->setModel(this->MainTableView);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
     ui->tableView->show();
-    //    this->db->closeDB();
     return;
 }
 void TeacherMainWindow::opendpmentTableView(QStringList list)   //打开部门表
@@ -413,39 +348,12 @@ void TeacherMainWindow::opendpmentTableView(QStringList list)   //打开部门�
         this->db->closeDB();
         return;
     }
-    //    this->db->query->prepare("SELECT * FROM `student` WHERE `student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = :ID)");
-    //    this->db->query->bindValue(":ID",this->dpment->getDepartmentID());
-    //    ret = this->db->query->exec();
-    //    if(!ret)
-    //    {
-    //        QMessageBox::critical(NULL,"错误",this->db->query->lastError().text());
-    //        this->db->closeDB();
-    //        return;
-    //    }
-    //    if(this->db->query->next())
-    //    {
-    //        this->mainTableView->setQuery(*(this->db->query));
-    //        this->mainTableView->setHeaderData(0,Qt::Horizontal,"学生ID");
-    //        this->mainTableView->setHeaderData(1,Qt::Horizontal,"学生性别");
-    //        this->mainTableView->setHeaderData(2,Qt::Horizontal,"学生姓名");
-    //        ui->tableView->setModel(this->mainTableView);
-    //        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
-    //        ui->tableView->show();
-    //    }
-    //    else
-    //    {
-    //        QMessageBox::information(NULL,"信息","没有成员");
-    //        this->db->closeDB();
-    //        return;
-    //    }
     this->RMainTableView = new QSqlRelationalTableModel(this);
     this->RMainTableView->setTable("studentdependence");
     this->RMainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
     this->RMainTableView->setRelation(3,QSqlRelation("student","student_id","student_name"));
     this->RMainTableView->setRelation(1,QSqlRelation("department","department_id","department_name"));
     this->RMainTableView->setFilter(QString("studentdependence_department_id = %1").arg(this->dpment->getDepartmentID()));
-    //    this->RMainTableView->removeColumn(2);
-    //    this->RMainTableView->removeColumn(0);
     this->RMainTableView->select();
     this->RMainTableView->setHeaderData(0,Qt::Horizontal,"社团/机构ID");
     this->RMainTableView->setHeaderData(1,Qt::Horizontal,"所属部门（修改请输入部门ID）");
@@ -454,7 +362,6 @@ void TeacherMainWindow::opendpmentTableView(QStringList list)   //打开部门�
     ui->tableView->setModel(this->RMainTableView);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  //设置表对齐
     ui->tableView->show();
-    //    this->db->closeDB();
     return;
 }
 
@@ -663,11 +570,6 @@ void TeacherMainWindow::on_pushButton_search_clicked()  //查询按钮槽函数
             this->MainTableView->setFilter(QString("department_id = %1").arg(search));
             this->MainTableView->select();
         }
-//        if(condition == "社团/机构ID")
-//        {
-//            this->MainTableView->setFilter(QString("department_group_id = %1").arg(search));
-//            this->MainTableView->select();
-//        }
         if(condition == "部门名称")
         {
 //            QString str = QString("department_name = %1").arg(search);
@@ -683,26 +585,11 @@ void TeacherMainWindow::on_pushButton_search_clicked()  //查询按钮槽函数
     }
     if(this->controlInfo == "department")
     {
-//        if(condition == "社团/机构ID")
-//        {
-//            this->RMainTableView->setFilter(QString("studentdependence_group_id = %1").arg(search));
-//            this->RMainTableView->select();
-//        }
-//        if(condition == "所属部门")
-//        {
-//            this->RMainTableView->setFilter(QString("studentdependence_department_id = %1").arg(search));
-//            this->RMainTableView->select();
-//        }
         if(condition == "归属ID")
         {
             this->RMainTableView->setFilter(QString("studentdependence_id = %1").arg(search));
             this->RMainTableView->select();
         }
-//        if(condition == "学生姓名")
-//        {
-//            this->RMainTableView->setFilter(QString("studentdependence_student_id = %1").arg(search));
-//            this->RMainTableView->select();
-//        }
     }
 }
 

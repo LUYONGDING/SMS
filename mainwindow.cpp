@@ -22,10 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_login,&QPushButton::clicked,this,&MainWindow::userLogin);    //连接登陆按钮和登陆槽函数
 
     ui->label_regist->installEventFilter(this); //安装事件过滤器，监听点击事件
-
-//    connect(this->regist,&registForm::destroyed,[=](){
-//        this->show();
-//    });
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     connect(this->timer,&QTimer::timeout,this,&MainWindow::timeUpdate);
@@ -36,10 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     bt->setFlat(true);
     connect(bt,&QPushButton::clicked,this,[=](){
        QMessageBox::information(NULL,NULL,"Hear me! King of Infinite Space! Planetmover! The Foundation of Fastness! Ruler of Earthquakes! The Vanquisher of Terror! The Creator of Panic! Destroyer! The Shining Victor! Son of Chaos and the Void! The Guardian of the Abyss! God of the Outermost Darkness! Lord of Dimensions! Riddle-knower! Guardian of The Secrets! Lord of the Labyrinth! Master of the Angles! God of the Whiporwills! Omegapoint! Lord of the Gate! Opener of the Way! The Oldest! All-in-One! The One by Life Prolonged! Umr At-Tawil! Iak-Sathath! Yog Sothoth NAFL'FTHAGN!!! Your servant call upon you!");
-//        this->play = new QMediaPlayer(this);
-//        play->setMedia(QMediaContent(QUrl::fromLocalFile(":/mainWin/Music/RyanAmon-LullabyforMergo.wav")));
-//        play->setVolume(30);
-//        play->play();
         QSound * star = new QSound(":/mainWin/Music/RyanAmon-LullabyforMergo.wav",this);
         star->play();
     });
@@ -111,11 +103,6 @@ void MainWindow::userLogin()    //登陆槽函数
             QMessageBox::information(this,"login","管理员登录成功");
             this->rtmain = new RootMainWindow();
             connect(this,&MainWindow::sendUserInfo0,rtmain,&RootMainWindow::getUserInfo);
-//            connect(this->timer,&QTimer::timeout,this,[=](){
-//                rtmain->show();
-//                emit sendUserInfo0(this->us);
-//                this->timer->stop();
-//            },Qt::UniqueConnection);
             connect(rtmain,&RootMainWindow::loginOut,this,[=](){
                 this->ui->lineEdit_userName->clear();
                 this->ui->lineEdit_passwd->clear();
@@ -126,7 +113,6 @@ void MainWindow::userLogin()    //登陆槽函数
             this->timer->start(1000);
             this->hide();
             return;
-            //code
         }
         if(1==us->getUserType())
         {
@@ -139,12 +125,6 @@ void MainWindow::userLogin()    //登陆槽函数
                 this->show();
             });
             connect(this,&MainWindow::sendUserInfo1,tchmain,&TeacherMainWindow::getUserInfo);
-//            connect(this->timer,&QTimer::timeout,this,[=](){
-//                tchmain->show();
-//                emit sendUserInfo1(this->us);
-//                this->timer->stop();
-//            },Qt::UniqueConnection);
-//            this->timer->start(1000);
             emit sendUserInfo1(*(this->us));
             tchmain->show();
             this->hide();
@@ -158,23 +138,15 @@ void MainWindow::userLogin()    //登陆槽函数
             connect(this->grpmain,&GroupMainWindow::loginOut,[=](){
                 this->ui->lineEdit_userName->clear();
                 this->ui->lineEdit_passwd->clear();
-//                delete this->grpmain;
                 this->show();
             });
             connect(this,&MainWindow::sendUserInfo2,grpmain,&GroupMainWindow::getUserInfo);
-//            connect(this->timer,&QTimer::timeout,this,[=](){
-//                grpmain->show();
-//                emit sendUserInfo2(us);
-//                this->timer->stop();
-//            },Qt::UniqueConnection);
-//            this->timer->start(1000);
             emit sendUserInfo2(*(this->us));
             this->grpmain->show();
             this->hide();
             return;
             //code
         }
-//        db->closeDB();
     }
 }
 
@@ -202,8 +174,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)   //事件过滤�
         //鼠标按下事件
         if(event->type() == QEvent::MouseButtonPress)
         {
-            //QMessageBox::information(this,"regist","注册");
-            //code
             regist = new registForm(this);
             regist->show();
             return true;

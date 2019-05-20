@@ -7,12 +7,6 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent) //有参构造函数
     QTextCodec::setCodecForLocale(codec);
 
     //!设置数据库参数
-//    this->HostName = "127.0.0.1";
-//    this->UserName = "root";
-//    this->Password = "root";
-//    this->DatabaseName = "group_manager_system";
-//    this->Port = 3306;
-
     readConfig();   //读取配置文件
 
 
@@ -26,15 +20,6 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent) //有参构造函数
     this->db->setPassword(this->Password); //数据库密码
     this->db->setDatabaseName(this->DatabaseName);   //数据库名字
     this->db->setPort(this->Port);  //设置端口
-
-//    if(!this->db->open())
-//    {
-//        qDebug() << this->db->lastError().text();
-//        return;
-//    }
-//#if debug_mode
-//    qDebug()<<"数据库打开成功";    //输出：打开数据库成功提示
-//#endif
 }
 
 DBconnt::DBconnt()  //无参构造函数
@@ -45,18 +30,11 @@ DBconnt::DBconnt()  //无参构造函数
     QTextCodec::setCodecForLocale(codec);
 
     //!设置数据库参数
-//    this->HostName = "127.0.0.1";
-//    this->UserName = "root";
-//    this->Password = "root";
-//    this->DatabaseName = "group_manager_system";
-//    this->Port = 3306;
     readConfig();   //读取配置文件
 
 
     this->db = new QSqlDatabase();
     *(this->db) = QSqlDatabase::addDatabase("QMYSQL"); //载入MySQL数据库驱动
-
-    //this->db = QSqlDatabase::addDatabase("QMYSQL");
 
     this->db->setHostName(this->HostName);    //设置数据库地址
     this->db->setUserName(this->UserName); //数据库用户名
@@ -64,11 +42,6 @@ DBconnt::DBconnt()  //无参构造函数
     this->db->setDatabaseName(this->DatabaseName);   //数据库名字
     this->db->setPort(this->Port);  //设置端口
 
-//    if(!this->db->open())
-//    {
-//        qDebug() << this->db->lastError().text();
-//        return;
-//    }
 
 }
 
@@ -129,8 +102,6 @@ void DBconnt::openDB()  //开启数据库
     }
     *(this->db) = QSqlDatabase::addDatabase("QMYSQL"); //载入MySQL数据库驱动
 
-    //this->db = QSqlDatabase::addDatabase("QMYSQL");
-
     this->db->setHostName(this->HostName);    //设置数据库地址
     this->db->setUserName(this->UserName); //数据库用户名
     this->db->setPassword(this->Password); //数据库密码
@@ -169,7 +140,6 @@ int DBconnt::readConfig()
            value=linelist[1];
            if(key.trimmed() == "$HostName")
            {
-//               hostname = value.trimmed();
                this->HostName = value.trimmed();
            }
            if(key.trimmed() == "$UserName")

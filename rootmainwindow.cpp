@@ -235,7 +235,6 @@ void RootMainWindow::setGroupModel()    //设置社团表树视图
 
 void RootMainWindow::setStuModel()  //设置学生表树视图
 {
-//    bool ret = false;
     this->stuModel = new QStandardItemModel(this);
     ui->treeView_student->setEditTriggers(0);
     ui->treeView_student->header()->hide();
@@ -247,7 +246,6 @@ void RootMainWindow::setStuModel()  //设置学生表树视图
 
 void RootMainWindow::setTchModel()  //设置教师表树视图
 {
-//    bool ret = false;
     this->tchModel = new QStandardItemModel(this);
     ui->treeView_teacher->setEditTriggers(0);
     ui->treeView_teacher->header()->hide();
@@ -279,7 +277,6 @@ void RootMainWindow::setSearchWidget()  //设置查询部件
     if(this->controlInfo=="StuGrp")
     {
         this->ui->comboBox->addItem("学生ID");
-        //       this->ui->comboBox->addItem("学生性别");
         this->ui->comboBox->addItem("学生姓名");
     }
     if(this->controlInfo=="StuStu")
@@ -415,7 +412,6 @@ void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)   //学生表右�
 {
     QModelIndex index = ui->treeView_student->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_student);
-//    QStandardItem * tmpItem = this->stuModel->itemFromIndex(index);
     QAction * reflash = new QAction(this);
     reflash->setText("刷新");
     connect(reflash,&QAction::triggered,this,&RootMainWindow::setStuModel);
@@ -433,7 +429,6 @@ void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)   //教师表右�
 {
     QModelIndex index = ui->treeView_teacher->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_teacher);
-//    QStandardItem * tmpItem = this->tchModel->itemFromIndex(index);
     QAction * reflash = new QAction(this);
     reflash->setText("刷新");
     connect(reflash,&QAction::triggered,this,&RootMainWindow::setTchModel);
@@ -499,7 +494,6 @@ void RootMainWindow::openRtTableViewInUser()    //在用户树视图中打开管
     this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
     this->MainTableView->setFilter("user_type = 0 AND user_name != 'root'");
     this->MainTableView->select();
-    //    this->MainTableView->removeColumn(3);
     this->MainTableView->setHeaderData(0,Qt::Horizontal,"用户ID");
     this->MainTableView->setHeaderData(1,Qt::Horizontal,"用户名");
     this->MainTableView->setHeaderData(2,Qt::Horizontal,"用户密码");
@@ -552,8 +546,6 @@ void RootMainWindow::openGrpTableViewInGrp(QStringList list)    //在社团树�
     this->MainTableView->setTable("department");
     this->MainTableView->setEditStrategy(QSqlTableModel::OnManualSubmit);
     this->MainTableView->setFilter(QString("department_group_id = %1").arg(this->grp->getGroupID()));
-    //    this->MainTableView->removeColumn(1);
-    //    this->MainTableView->removeColumn(0);
     this->MainTableView->setHeaderData(0,Qt::Horizontal,"部门ID");
     this->MainTableView->setHeaderData(1,Qt::Horizontal,"社团/机构ID");
     this->MainTableView->setHeaderData(2,Qt::Horizontal,"部门名称");
@@ -763,7 +755,6 @@ void RootMainWindow::on_pushButton_add_clicked()    //增加数据按钮槽函�
     int rowNum = this->MainTableView->rowCount();
     if(this->controlInfo == "rootUser")
     {
-        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
         this->db->query->prepare("SELECT * FROM `user` WHERE `user_id` = (SELECT MAX(`user_id`) FROM `user`)");
         bool ret = this->db->query->exec();
         if(!ret)
@@ -794,7 +785,6 @@ void RootMainWindow::on_pushButton_add_clicked()    //增加数据按钮槽函�
         {
             ID = this->db->query->value("user_id").toInt();
         }
-        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
         this->MainTableView->insertRow(rowNum);
         this->MainTableView->setData(this->MainTableView->index(rowNum,3),1);
         this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
@@ -813,26 +803,22 @@ void RootMainWindow::on_pushButton_add_clicked()    //增加数据按钮槽函�
         {
             ID = this->db->query->value("user_id").toInt();
         }
-        //        int ID = this->MainTableView->record(rowNum - 1).value("user_id").toInt();
         this->MainTableView->insertRow(rowNum);
         this->MainTableView->setData(this->MainTableView->index(rowNum,3),2);
         this->MainTableView->setData(this->MainTableView->index(rowNum,0),ID+1);
     }
     if(this->controlInfo=="Grp_0Grp")
     {
-        //        int rowNum = this->MainTableView->columnCount();
         this->MainTableView->insertRow(rowNum);
         this->MainTableView->setData(this->MainTableView->index(rowNum,3),0);
     }
     if(this->controlInfo=="Grp_1Grp")
     {
-        //        int rowNum = this->MainTableView->columnCount();
         this->MainTableView->insertRow(rowNum);
         this->MainTableView->setData(this->MainTableView->index(rowNum,3),1);
     }
     if(this->controlInfo=="DpmentGrp")
     {
-        //        qDebug()<<this->grp->getinfo();
         this->db->query->prepare("SELECT * FROM `department` WHERE `department_id` = (SELECT MAX(`department_id`) FROM `department`)");
         bool ret = this->db->query->exec();
         if(!ret)
@@ -932,7 +918,6 @@ void RootMainWindow::on_pushButton_change_clicked() //修改数据按钮槽函�
                     return;
                 }
             }
-            //            this->controlInfo = "";
         }
         else
         {
@@ -948,7 +933,6 @@ void RootMainWindow::on_pushButton_change_clicked() //修改数据按钮槽函�
 void RootMainWindow::on_pushButton_delete_clicked() //删除按钮槽函数
 {
     int curRow = this->ui->tableView->currentIndex().row();
-    //    int curCul = this->ui->tableView->currentIndex().column();
     int stuID;
     if(this->controlInfo=="StuGrp")
     {
@@ -1095,28 +1079,8 @@ void RootMainWindow::on_pushButton_search_clicked() //查询按钮槽函数
         }
         if(condition == "学生姓名")
         {
-            //            this->db->query->prepare("SELECT * FROM `studentdependence` WHERE (`studentdependence_student_id` IN (SELECT `student_id` FROM `student` WHERE `student_name` = :NAME)) AND (`studentdependence_department_id` = :DPMENTID)");
-            //            this->db->query->bindValue(":NAME",search);
-            //            this->db->query->bindValue(":DPMENTID",this->dpment->getDepartmentID());
-            //            bool ret = this->db->query->exec();
-            //            if(!ret)
-            //            {
-            //                QMessageBox::critical(this,"错误","数据库查询错误");
-            //            }
-            //            if(this->db->query->next())
-            //            {
-            //                int dependence = this->db->query->value("studentdependence_student_id").toInt();
-            //                qDebug()<<dependence;
-            //                this->MainTableView->setFilter(QString("`student_id` = %1 ").arg(dependence));
-            //                this->MainTableView->select();
-            //            }
             this->MainTableView->setFilter(QString("`student_name` = '%1' AND (`student_id` IN (SELECT `studentdependence_student_id` FROM `studentdependence` WHERE `studentdependence_department_id` = %2))").arg(search).arg(this->dpment->getDepartmentID()));
             this->MainTableView->select();
-//            else
-//            {
-//                this->MainTableView->setFilter("`student_name` = ''");
-//                this->MainTableView->select();
-//            }
         }
     }
     if(this->controlInfo=="StuStu")
@@ -1139,10 +1103,6 @@ void RootMainWindow::on_pushButton_search_clicked() //查询按钮槽函数
     }
     if(this->controlInfo=="TchTch")
     {
-        //           this->ui->comboBox->addItem("教师ID");
-        //           this->ui->comboBox->addItem("教师用户ID");
-        //           this->ui->comboBox->addItem("教师姓名");
-        //           this->ui->comboBox->addItem("教师性别");
         if(condition=="教师ID")
         {
             this->MainTableView->setFilter(QString("`teacher_id` = %1").arg(search));

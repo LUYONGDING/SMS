@@ -86,10 +86,6 @@ registForm::registForm(QWidget *parent) :
         });
         sltTeacher->show();
     });
-    //    connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString ID){
-    //        qDebug()<<ID;
-    //        //ui->lineEdit_groupTeacher->setText(ID);
-    //    });
 
 }
 

@@ -19,14 +19,6 @@ selectTeacherForm::selectTeacherForm(QWidget *parent) :
     connect(ui->pushButton_cancel,&QPushButton::clicked,[=](){   //关闭按钮的信号与槽函数连接
         this->close();
     });
-    //    this->db->openDB();
-    //    this->teacherModel = new QSqlTableModel(this);  //为教师Model开辟空间
-    //    teacherModel->setTable("teacher");  //选择teacher表
-    //    teacherModel->select(); //选择所有数据
-
-    //    ui->tableView->setModel(teacherModel);  //将教师Model设置到tableView
-    //    ui->tableView->show();  //显示
-
     this->db->openDB();
     this->teacherModel = new QSqlQueryModel(this); //为教师Model开辟空间
     this->teacherModel->setQuery("SELECT * FROM TEACHER");  //设置sql语句
@@ -70,7 +62,6 @@ void selectTeacherForm::slotRowDoubleClicked(const QModelIndex & index)
     {
         QSqlRecord record = teacherModel->record(index.row());
         QString ID = record.value("teacher_id").toString();
-//        qDebug()<<"点击了"<<ID;
         emit selectedID(ID);    //发送ID信号
     }
 }
@@ -78,7 +69,6 @@ void selectTeacherForm::returnTeacherID()
 {
     QSqlRecord record = teacherModel->record(ui->tableView->currentIndex().row());
     QString ID = record.value("teacher_id").toString();
-//    qDebug()<<"返回了"<<ID;
     emit selectedID(ID);    //发送ID信号
 }
 void selectTeacherForm::searchTeacher()
@@ -92,7 +82,6 @@ void selectTeacherForm::searchTeacher()
         bool ret = 0;
         this->db->query->prepare("SELECT * FROM TEACHER WHERE teacher_id = :value ");
         this->db->query->bindValue(":value",tch->getTeacherID());
-//        qDebug()<<this->db->query->lastQuery();
         ret = this->db->query->exec();
         if(!ret)
         {
