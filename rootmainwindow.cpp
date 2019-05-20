@@ -6,7 +6,8 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     ui(new Ui::RootMainWindow)
 {
     ui->setupUi(this);
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setAttribute(Qt::WA_DeleteOnClose);   //设置窗口关闭后自动销毁
+    //成员初始化
     this->us = new user(this);
     this->infoUs = new user(this);
     this->db = new DBconnt(this);
@@ -16,23 +17,25 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
     this->stu = new student(this);
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
+    //设置各个控件Margin与Spacing
     setMarginSpacing();
-    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
+    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置图标
+    //去掉dockWidget的标题栏
     QWidget * tempWidget = new QWidget(this);
     ui->dockWidget_left->setTitleBarWidget(tempWidget);
-    this->ui->widget_2->hide();
-    connect(ui->actionabout,&QAction::triggered,[=](){
+    this->ui->widget_2->hide(); //隐藏主框体
+    connect(ui->actionabout,&QAction::triggered,[=](){  //关于菜单选项信号与槽连接
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
         QMessageBox::about(this,"关于",about);
     });
-    connect(ui->actionaboutQt,&QAction::triggered,[=](){
+    connect(ui->actionaboutQt,&QAction::triggered,[=](){    //关于Qt菜单选项信号与槽连接
         QMessageBox::aboutQt(this);
     });
-    connect(ui->actionuserInfo,&QAction::triggered,this,[=](){
+    connect(ui->actionuserInfo,&QAction::triggered,this,[=](){  //用户信息菜单选项信号与槽的连接
         QString info = QString("用户名：%1\n\n用户类型:管理员").arg(this->infoUs->getUserName());
         QMessageBox::information(this,"用户信息",info);
     });
-    connect(ui->actionloginOut,&QAction::triggered,this,[=](){
+    connect(ui->actionloginOut,&QAction::triggered,this,[=](){  //用户登出菜单选项信号与槽的连接
         int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
         if(lgnout==QMessageBox::Yes)
         {
@@ -45,6 +48,7 @@ RootMainWindow::RootMainWindow(QWidget *parent) :
             return;
         }
     });
+    //显示部件的信号与槽
     connect(this->ui->actionshow_control_widget,&QAction::triggered,this,[=](){
         this->ui->dockWidget_ToolButton->show();
     });
@@ -92,14 +96,14 @@ void RootMainWindow::setMarginSpacing()
     this->ui->widget_2->layout()->setSpacing(0);
 }
 
-void RootMainWindow::paintEvent(QPaintEvent *event)
+void RootMainWindow::paintEvent(QPaintEvent *event) //绘图事件
 {
     QPainter painter(this);
     painter.drawPixmap(0,0,this->width(),this->height(),QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
     return QMainWindow::paintEvent(event);
 }
 
-void RootMainWindow::setUserModel()
+void RootMainWindow::setUserModel() //设置用户树视图
 {
     bool ret = 0;
     this->userModel = new QStandardItemModel(this);
@@ -151,7 +155,7 @@ void RootMainWindow::setUserModel()
     connect(ui->treeView_user,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInUserByDC);
 }
 
-void RootMainWindow::setGroupModel()
+void RootMainWindow::setGroupModel()    //设置社团表树视图
 {
     bool ret = 0;
     this->groupModel = new QStandardItemModel(this);
@@ -229,7 +233,7 @@ void RootMainWindow::setGroupModel()
     connect(ui->treeView_group,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInGrpByDC);
 }
 
-void RootMainWindow::setStuModel()
+void RootMainWindow::setStuModel()  //设置学生表树视图
 {
 //    bool ret = false;
     this->stuModel = new QStandardItemModel(this);
@@ -241,7 +245,7 @@ void RootMainWindow::setStuModel()
     connect(ui->treeView_student,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInStuByDC);
 }
 
-void RootMainWindow::setTchModel()
+void RootMainWindow::setTchModel()  //设置教师表树视图
 {
 //    bool ret = false;
     this->tchModel = new QStandardItemModel(this);
@@ -253,7 +257,7 @@ void RootMainWindow::setTchModel()
     connect(ui->treeView_teacher,&QTreeView::doubleClicked,this,&RootMainWindow::openTableViewInTchByDC);
 }
 
-void RootMainWindow::setSearchWidget()
+void RootMainWindow::setSearchWidget()  //设置查询部件
 {
     this->ui->comboBox->clear();
     if(this->controlInfo == "GrpUser" || this->controlInfo=="TchUser" || this->controlInfo == "rootUser")
@@ -293,7 +297,7 @@ void RootMainWindow::setSearchWidget()
     }
 }
 
-void RootMainWindow::getUserInfo(user & us)
+void RootMainWindow::getUserInfo(user & us) //获得用户信息
 {
     *(this->infoUs) = us;
     if(this->infoUs->getUserName()=="root")
@@ -305,17 +309,19 @@ void RootMainWindow::getUserInfo(user & us)
     {
         this->setWindowTitle(QString("%1 [管理员] - 学生社团管理系统").arg(this->infoUs->getUserName()));
     }
+    //设置各个树视图
     setGroupModel();
     setUserModel();
     setStuModel();
     setTchModel();
+    //设置右键
     connect(this->ui->treeView_user,&QTreeView::customContextMenuRequested,this,&RootMainWindow::CustomContextMenu_User);
     connect(this->ui->treeView_group,&QTreeView::customContextMenuRequested,this,&RootMainWindow::CustomContextMenu_Grp);
     connect(this->ui->treeView_student,&QTreeView::customContextMenuRequested,this,&RootMainWindow::CustomContextMenu_Stu);
     connect(this->ui->treeView_teacher,&QTreeView::customContextMenuRequested,this,&RootMainWindow::CustomContextMenu_Tch);
 }
 
-void RootMainWindow::CustomContextMenu_User(const QPoint &pos)
+void RootMainWindow::CustomContextMenu_User(const QPoint &pos)  //用户表右键菜单
 {
     QModelIndex index = ui->treeView_user->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_user);
@@ -351,7 +357,7 @@ void RootMainWindow::CustomContextMenu_User(const QPoint &pos)
     tree_menu->exec(QCursor::pos());
 }
 
-void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)
+void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)   //机构/社团右键菜单
 {
     QModelIndex index = ui->treeView_group->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_group);
@@ -405,7 +411,7 @@ void RootMainWindow::CustomContextMenu_Grp(const QPoint &pos)
     tree_menu->exec(QCursor::pos());
 }
 
-void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)
+void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)   //学生表右键菜单
 {
     QModelIndex index = ui->treeView_student->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_student);
@@ -423,7 +429,7 @@ void RootMainWindow::CustomContextMenu_Stu(const QPoint &pos)
     tree_menu->exec(QCursor::pos());
 }
 
-void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)
+void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)   //教师表右键菜单
 {
     QModelIndex index = ui->treeView_teacher->indexAt(pos);
     QMenu * tree_menu = new QMenu(this->ui->treeView_teacher);
@@ -441,7 +447,7 @@ void RootMainWindow::CustomContextMenu_Tch(const QPoint &pos)
     tree_menu->exec(QCursor::pos());
 }
 
-void RootMainWindow::openGrpTableViewInUser()
+void RootMainWindow::openGrpTableViewInUser()   //在用户树视图打开社团用户表
 {
     this->controlInfo = "GrpUser";
     setSearchWidget();
@@ -462,7 +468,7 @@ void RootMainWindow::openGrpTableViewInUser()
     return;
 }
 
-void RootMainWindow::openTchTableViewInUser()
+void RootMainWindow::openTchTableViewInUser()   //在用户树试图中打开教师树视图
 {
     this->controlInfo = "TchUser";
     setSearchWidget();
@@ -482,7 +488,7 @@ void RootMainWindow::openTchTableViewInUser()
     ui->tableView->show();
 }
 
-void RootMainWindow::openRtTableViewInUser()
+void RootMainWindow::openRtTableViewInUser()    //在用户树视图中打开管理员用户（Root用户限定）
 {
     this->controlInfo = "rootUser";
     setSearchWidget();
@@ -503,7 +509,7 @@ void RootMainWindow::openRtTableViewInUser()
     ui->tableView->show();
 }
 
-void RootMainWindow::openGrpTableViewInGrp(QStringList list)
+void RootMainWindow::openGrpTableViewInGrp(QStringList list)    //在社团树视图中打开社团表
 {
     qDebug()<<list[0]<<","<<list[1];
     this->ui->widget_2->show();
@@ -558,7 +564,7 @@ void RootMainWindow::openGrpTableViewInGrp(QStringList list)
     ui->tableView->show();
 }
 
-void RootMainWindow::openDpmentTableViewInGrp(QStringList list)
+void RootMainWindow::openDpmentTableViewInGrp(QStringList list) //在社团树视图中打开部门
 {
     this->controlInfo="StuGrp";
     setSearchWidget();
@@ -601,7 +607,7 @@ void RootMainWindow::openDpmentTableViewInGrp(QStringList list)
     ui->tableView->show();
 }
 
-void RootMainWindow::openGrp_0TableViewInGrp()
+void RootMainWindow::openGrp_0TableViewInGrp()  //在社团树视图打开机构
 {
     this->controlInfo="Grp_0Grp";
     setSearchWidget();
@@ -621,7 +627,7 @@ void RootMainWindow::openGrp_0TableViewInGrp()
     ui->tableView->show();
 }
 
-void RootMainWindow::openGrp_1TableViewInGrp()
+void RootMainWindow::openGrp_1TableViewInGrp()  //在社团树视图中打开社团
 {
     this->controlInfo="Grp_1Grp";
     setSearchWidget();
@@ -641,7 +647,7 @@ void RootMainWindow::openGrp_1TableViewInGrp()
     ui->tableView->show();
 }
 
-void RootMainWindow::openStuTableViewInStu()
+void RootMainWindow::openStuTableViewInStu()    //在学生树视图中打开学生表
 {
     this->controlInfo="StuStu";
     setSearchWidget();
@@ -659,7 +665,7 @@ void RootMainWindow::openStuTableViewInStu()
     ui->tableView->show();
 }
 
-void RootMainWindow::openTchTableViewInTch()
+void RootMainWindow::openTchTableViewInTch()    //在教师表树视图中打开教师表
 {
     this->controlInfo="TchTch";
     setSearchWidget();
@@ -678,7 +684,7 @@ void RootMainWindow::openTchTableViewInTch()
     ui->tableView->show();
 }
 
-void RootMainWindow::openTableViewInUserByDC(const QModelIndex &index)
+void RootMainWindow::openTableViewInUserByDC(const QModelIndex &index)  //在用户树视图中双击打开
 {
     QStandardItem * item = this->userModel->itemFromIndex(index);
     QString str = item->text();
@@ -700,7 +706,7 @@ void RootMainWindow::openTableViewInUserByDC(const QModelIndex &index)
     }
 }
 
-void RootMainWindow::openTableViewInGrpByDC(const QModelIndex &index)
+void RootMainWindow::openTableViewInGrpByDC(const QModelIndex &index)   //在机构/社团树视图中双击打开
 {
     QStandardItem * item = this->groupModel->itemFromIndex(index);
     QString str = item->text();
@@ -727,7 +733,7 @@ void RootMainWindow::openTableViewInGrpByDC(const QModelIndex &index)
     }
 }
 
-void RootMainWindow::openTableViewInStuByDC(const QModelIndex &index)
+void RootMainWindow::openTableViewInStuByDC(const QModelIndex &index)   //在学生树视图中双击打开
 {
     QStandardItem * item = this->stuModel->itemFromIndex(index);
     QString str = item->text();
@@ -737,7 +743,7 @@ void RootMainWindow::openTableViewInStuByDC(const QModelIndex &index)
     }
 }
 
-void RootMainWindow::openTableViewInTchByDC(const QModelIndex &index)
+void RootMainWindow::openTableViewInTchByDC(const QModelIndex &index)   //在教师树视图中双击打开
 {
     QStandardItem * item = this->tchModel->itemFromIndex(index);
     QString str = item->text();
@@ -747,7 +753,7 @@ void RootMainWindow::openTableViewInTchByDC(const QModelIndex &index)
     }
 }
 
-void RootMainWindow::on_pushButton_add_clicked()
+void RootMainWindow::on_pushButton_add_clicked()    //增加数据按钮槽函数
 {
     if(this->ui->widget_2->isHidden() || this->controlInfo=="")
     {
@@ -897,7 +903,7 @@ void RootMainWindow::on_pushButton_add_clicked()
     }
 }
 
-void RootMainWindow::on_pushButton_change_clicked()
+void RootMainWindow::on_pushButton_change_clicked() //修改数据按钮槽函数
 {
     if(this->ui->widget_2->isHidden() || this->controlInfo=="")
     {
@@ -939,7 +945,7 @@ void RootMainWindow::on_pushButton_change_clicked()
     }
 }
 
-void RootMainWindow::on_pushButton_delete_clicked()
+void RootMainWindow::on_pushButton_delete_clicked() //删除按钮槽函数
 {
     int curRow = this->ui->tableView->currentIndex().row();
     //    int curCul = this->ui->tableView->currentIndex().column();
@@ -991,7 +997,7 @@ void RootMainWindow::on_pushButton_delete_clicked()
     }
 }
 
-void RootMainWindow::on_pushButton_search_clicked()
+void RootMainWindow::on_pushButton_search_clicked() //查询按钮槽函数
 {
     if(this->ui->widget_2->isHidden() || this->controlInfo == "")
     {
@@ -1160,7 +1166,7 @@ void RootMainWindow::on_pushButton_search_clicked()
     }
 }
 
-void RootMainWindow::on_pushButton_reset_clicked()
+void RootMainWindow::on_pushButton_reset_clicked()  //清空按钮槽函数
 {
     this->ui->lineEdit->clear();
 }

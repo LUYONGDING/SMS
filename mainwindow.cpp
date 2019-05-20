@@ -178,7 +178,7 @@ void MainWindow::userLogin()    //登陆槽函数
     }
 }
 
-void MainWindow::timeUpdate()
+void MainWindow::timeUpdate()   //更新时间
 {
     //获取时间
     QDateTime current_time = QDateTime::currentDateTime();
@@ -186,10 +186,11 @@ void MainWindow::timeUpdate()
     currentTimeLabel->setText(timestr);
 }
 
-bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)   //事件过滤器
 {
-    if(watched == ui->label_regist)
+    if(watched == ui->label_regist) //拦截注册QLabel
     {
+        //鼠标移动到Label时改变鼠标样式
         if(event->type() == QEvent::MouseMove)
         {
             this->setCursor(Qt::PointingHandCursor);
@@ -198,6 +199,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         {
             this->setCursor(Qt::ArrowCursor);
         }
+        //鼠标按下事件
         if(event->type() == QEvent::MouseButtonPress)
         {
             //QMessageBox::information(this,"regist","注册");
@@ -213,7 +215,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     }
     else
     {
-        return MainWindow::eventFilter(watched,event);
+        return MainWindow::eventFilter(watched,event);  //其余事件交由父类处理
     }
 
 }

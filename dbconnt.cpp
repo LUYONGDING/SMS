@@ -1,6 +1,6 @@
 ﻿#include "dbconnt.h"
 
-DBconnt::DBconnt(QObject *parent) : QObject(parent)
+DBconnt::DBconnt(QObject *parent) : QObject(parent) //有参构造函数
 {
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");  //设置字符集
@@ -12,7 +12,8 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent)
 //    this->Password = "root";
 //    this->DatabaseName = "group_manager_system";
 //    this->Port = 3306;
-    readConfig();
+
+    readConfig();   //读取配置文件
 
 
     this->db = new QSqlDatabase();
@@ -24,7 +25,7 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent)
     this->db->setUserName(this->UserName); //数据库用户名
     this->db->setPassword(this->Password); //数据库密码
     this->db->setDatabaseName(this->DatabaseName);   //数据库名字
-    this->db->setPort(this->Port);
+    this->db->setPort(this->Port);  //设置端口
 
 //    if(!this->db->open())
 //    {
@@ -36,7 +37,7 @@ DBconnt::DBconnt(QObject *parent) : QObject(parent)
 //#endif
 }
 
-DBconnt::DBconnt()  //构造函数
+DBconnt::DBconnt()  //无参构造函数
 {
 
 
@@ -49,7 +50,7 @@ DBconnt::DBconnt()  //构造函数
 //    this->Password = "root";
 //    this->DatabaseName = "group_manager_system";
 //    this->Port = 3306;
-    readConfig();
+    readConfig();   //读取配置文件
 
 
     this->db = new QSqlDatabase();
@@ -61,7 +62,7 @@ DBconnt::DBconnt()  //构造函数
     this->db->setUserName(this->UserName); //数据库用户名
     this->db->setPassword(this->Password); //数据库密码
     this->db->setDatabaseName(this->DatabaseName);   //数据库名字
-    this->db->setPort(this->Port);
+    this->db->setPort(this->Port);  //设置端口
 
 //    if(!this->db->open())
 //    {
@@ -106,7 +107,7 @@ QString DBconnt::getDBinfo() const
     return info;
 }
 
-void DBconnt::closeDB()
+void DBconnt::closeDB() //关闭数据库
 {
     if(false == this->db->isOpen() || NULL == this->db)  //判断数据库是否已经打开
     {
@@ -119,7 +120,7 @@ void DBconnt::closeDB()
     this->db->close();   //关闭数据库
 }
 
-void DBconnt::openDB()
+void DBconnt::openDB()  //开启数据库
 {
     if(true == this->db->isOpen())
     {
@@ -147,18 +148,18 @@ int DBconnt::readConfig()
 {
     qDebug()<<QDir::currentPath();
     QFile configFile("config.ini");
-    if(!configFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) //读取文本文件
     {
         qDebug()<<"打开配置文件错误"<<endl;
         return 0;
     }
-    QTextStream txtInput(&configFile);
+    QTextStream txtInput(&configFile);  //以文件流方式读取
     qDebug()<<configFile.fileName();
     QStringList linelist;
     QString line;
     QString key;
     QString value;
-    while(!txtInput.atEnd())
+    while(!txtInput.atEnd())    //读取文件
     {
         line = txtInput.readLine();
         if(line.startsWith("$"))

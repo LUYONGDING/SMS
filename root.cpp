@@ -6,10 +6,7 @@ root::root(QObject *parent) : QObject(parent)
 }
 
 root::root(){}//无参构造函数
-root::root(int rootID,
-user * us,
-QString rootName,
-bool rootSex)//有参构造函数
+root::root(int rootID, user * us, QString rootName, bool rootSex)//有参构造函数
 {
     if(NULL == us)
     {

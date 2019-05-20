@@ -6,7 +6,8 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
     ui(new Ui::TeacherMainWindow)
 {
     ui->setupUi(this);
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setAttribute(Qt::WA_DeleteOnClose);   //设置窗口关闭时删除
+    //初始化成员
     this->us = new user(this);
     this->db = new DBconnt(this);
     this->tch = new teacher(this);
@@ -14,24 +15,26 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
     this->dpment = new department(this);
     this->mainTableView = new QSqlQueryModel(this);
     this->MainTableView = NULL;
-    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));
+    this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
+    //去掉dockwidget的标题栏
     QWidget * tempWidget = new QWidget(this);
     ui->dockWidget_left->setTitleBarWidget(tempWidget);
     ui->widget->hide();
+    //设置各个框体的Margin与Spacing
     this->setMarginSpacing();
     ui->treeView_2->setContextMenuPolicy(Qt::CustomContextMenu);
     //    this->actionopenGrpTableView = new QAction("打开",this->ui->treeView_2);
     //    this->actionopendpmentTableView = new QAction("打开",this->ui->treeView_2);
     //    this->actionopendpmentTableViewByGrp = new QAction("打开该部门所在的社团",this->ui->treeView_2);
-    connect(ui->treeView_2,&QTreeView::doubleClicked,this,&TeacherMainWindow::openTableViewByDC);
-    connect(ui->actionabout,&QAction::triggered,[=](){
+    connect(ui->treeView_2,&QTreeView::doubleClicked,this,&TeacherMainWindow::openTableViewByDC);   //双击打开
+    connect(ui->actionabout,&QAction::triggered,[=](){  //菜单关于选项
         QString about = "Based on Qt 5.8.0(MSVC 2015 , 32 bit)\n\nBuilt on Mon Mar 11 21:31:43 2019 +0800\n\nDemo ver 1.0\n\nCopyright © 2019 luyongding. All Rights Reserved.\n\nThis progarm only used by personal graduation project.If you want to use it for other purposes,please ask the auther first.\nlyd2233970479@163.com";
         QMessageBox::about(this,"关于",about);
     });
-    connect(ui->actionaboutQt,&QAction::triggered,[=](){
+    connect(ui->actionaboutQt,&QAction::triggered,[=](){    //菜单关于Qt选项
         QMessageBox::aboutQt(this);
     });
-    connect(ui->actionloginout,&QAction::triggered,[=](){
+    connect(ui->actionloginout,&QAction::triggered,[=](){   //菜单登出选项
         int lgnout = QMessageBox::question(this,"登出","确定登出吗？");
         if(lgnout==QMessageBox::Yes)
         {
@@ -44,12 +47,14 @@ TeacherMainWindow::TeacherMainWindow(QWidget *parent) :
             return;
         }
     });
+    //菜单中显示各个部件
     connect(ui->actionshow_control_widget,&QAction::triggered,[=](){
         this->ui->dockWidget_ToolButton->show();
     });
     connect(ui->actionshow_search_widget,&QAction::triggered,[=](){
         this->ui->dockWidget_2->show();
     });
+    //显示当前时间
     this->timer = new QTimer(this);
     this->currentTimeLabel = new QLabel(this);
     this->ui->statusbar->addWidget(this->currentTimeLabel);
@@ -83,7 +88,7 @@ void TeacherMainWindow::setMarginSpacing()
     this->ui->widget->layout()->setMargin(1);
 }
 
-void TeacherMainWindow::setSearchWidget()
+void TeacherMainWindow::setSearchWidget()   //设置查询部件
 {
     this->ui->comboBox->clear();
     if(this->controlInfo == "group")
@@ -119,7 +124,7 @@ void TeacherMainWindow::getUserInfo(user & us){ //获得登陆用户的槽函数
     });
     return;
 }
-void TeacherMainWindow::setGroupModel()
+void TeacherMainWindow::setGroupModel() //设置社团树视图
 {
     bool ret = 0;
     this->model = new QStandardItemModel(ui->treeView_2);
@@ -220,7 +225,7 @@ void TeacherMainWindow::setGroupModel()
     //    model->appendRow(item);
     //    ui->treeView_2->setModel(model);
 }
-void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
+void TeacherMainWindow::CustomContextMenu(const QPoint & pos)   //右键菜单
 {
 
 
@@ -298,7 +303,7 @@ void TeacherMainWindow::CustomContextMenu(const QPoint & pos)
     }
     tree_menu->exec(QCursor::pos());
 }
-void TeacherMainWindow::openGrpTableView(QStringList list)
+void TeacherMainWindow::openGrpTableView(QStringList list)  //打开社团表
 {
     ui->widget->show();
     this->controlInfo = "group";
@@ -379,7 +384,7 @@ void TeacherMainWindow::openGrpTableView(QStringList list)
     //    this->db->closeDB();
     return;
 }
-void TeacherMainWindow::opendpmentTableView(QStringList list)
+void TeacherMainWindow::opendpmentTableView(QStringList list)   //打开部门表
 {
     ui->widget->show();
     this->controlInfo = "department";
@@ -453,7 +458,7 @@ void TeacherMainWindow::opendpmentTableView(QStringList list)
     return;
 }
 
-void TeacherMainWindow::openTableViewByDC(const QModelIndex & index)
+void TeacherMainWindow::openTableViewByDC(const QModelIndex & index)    //双击打开社团表
 {
     QStandardItem * item = model->itemFromIndex(index);
     QString str = item->text();
@@ -470,7 +475,7 @@ void TeacherMainWindow::openTableViewByDC(const QModelIndex & index)
         opendpmentTableView(list);
     }
 }
-void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
+void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)  //双击打开部门表
 {
     ui->widget->show();
     bool ret = false;
@@ -508,7 +513,7 @@ void TeacherMainWindow::opendpmentTableViewByGrp(QStringList list)
     }
 }
 
-void TeacherMainWindow::on_pushButton_add_clicked()
+void TeacherMainWindow::on_pushButton_add_clicked() //增加按钮槽函数
 {
     if(this->ui->widget->isHidden())
     {
@@ -535,7 +540,7 @@ void TeacherMainWindow::on_pushButton_add_clicked()
     return;
 }
 
-void TeacherMainWindow::on_pushButton_change_clicked()
+void TeacherMainWindow::on_pushButton_change_clicked()  //修改按钮槽函数
 {
     if(this->ui->widget->isHidden())
     {
@@ -587,7 +592,7 @@ void TeacherMainWindow::on_pushButton_change_clicked()
     }
 }
 
-void TeacherMainWindow::on_pushButton_delete_clicked()
+void TeacherMainWindow::on_pushButton_delete_clicked()  //删除按钮槽函数
 {
     if(this->ui->widget->isHidden())
     {
@@ -643,7 +648,7 @@ void TeacherMainWindow::on_pushButton_delete_clicked()
     }
 }
 
-void TeacherMainWindow::on_pushButton_search_clicked()
+void TeacherMainWindow::on_pushButton_search_clicked()  //查询按钮槽函数
 {
     if(this->ui->widget->isHidden())
     {
@@ -701,7 +706,7 @@ void TeacherMainWindow::on_pushButton_search_clicked()
     }
 }
 
-void TeacherMainWindow::on_pushButton_reset_clicked()
+void TeacherMainWindow::on_pushButton_reset_clicked()   //清空按钮槽函数
 {
     this->ui->lineEdit->clear();
 }

@@ -6,7 +6,6 @@ registForm::registForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::registForm)
 {
-
     this->setWindowFlags(Qt::Widget | Qt::Dialog);
     this->setWindowModality(Qt::WindowModal);   //设置为模态窗口
     ui->setupUi(this);
@@ -117,7 +116,7 @@ void registForm::paintEvent(QPaintEvent *event) //使用绘图事件设置背景
     painter.drawPixmap(0,0,610,610,QPixmap(":/mainWin/background/guishen_0039ev05a07.jpg"));
     return QWidget::paintEvent(event);
 }
-void registForm::SetNULLTeacherEdit()
+void registForm::SetNULLTeacherEdit()   //清空教师Edit
 {
     ui->lineEdit_teacherName->setText("");
     ui->lineEdit_teacher_userName->setText("");
@@ -125,7 +124,7 @@ void registForm::SetNULLTeacherEdit()
     ui->lineEdit_teacher_userPasswd2->setText("");
     ui->radioButton_male->setChecked(false);
 }
-void registForm::SetNULLGroupEdit()
+void registForm::SetNULLGroupEdit() //清空社团
 {
     ui->lineEdit_groupName->setText("");
     ui->lineEdit_groupTeacher->setText("");
@@ -134,7 +133,7 @@ void registForm::SetNULLGroupEdit()
     ui->lineEdit_group_userPasswd2->setText("");
     ui->radioButton_agency->setChecked(false);
 }
-bool registForm::teacherRegistCheck()
+bool registForm::teacherRegistCheck()   //注册前检查
 {
     if(!rx.exactMatch(ui->lineEdit_teacher_userPasswd->text())
             && !ui->lineEdit_teacher_userPasswd->text().isEmpty())  //再次进行密码格式检查
@@ -169,7 +168,7 @@ bool registForm::teacherRegistCheck()
     }
     return true;
 }
-bool registForm::groupRegistCheck()
+bool registForm::groupRegistCheck() //注册前检查
 {
     if(!rx.exactMatch(ui->lineEdit_group_user_passwd->text())
             && !ui->lineEdit_group_user_passwd->text().isEmpty())
@@ -204,9 +203,9 @@ bool registForm::groupRegistCheck()
     }
     return true;
 }
-void registForm::userRegist()
+void registForm::userRegist()   //用户注册
 {
-    if(ui->comboBox->currentText()=="教师")
+    if(ui->comboBox->currentText()=="教师")   //教师用户
     {
         bool check = teacherRegistCheck();  //进行注册前检查
         if(!check)  //检查失败则返回
@@ -279,7 +278,7 @@ void registForm::userRegist()
         this->SetNULLTeacherEdit();
         this->db->closeDB();
     }
-    if(ui->comboBox->currentText()=="社团")
+    if(ui->comboBox->currentText()=="社团")   //社团用户
     {
         bool check =groupRegistCheck();
         if(!check)
