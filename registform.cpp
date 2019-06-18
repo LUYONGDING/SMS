@@ -12,12 +12,11 @@ registForm::registForm(QWidget *parent) :
     sltTeacher = NULL;
     this->setWindowTitle("用户注册");   //设置窗口标题
     this->setWindowIcon(QIcon(":/mainWin/Icon/guishen_0131ev05b08mg01.png"));   //设置窗口图标
-
-
     this->db = new DBconnt(this);   //初始化数据库类
     this->us = new user(this);  //初始化用户类
     this->tch = new teacher(this);  //初始化教师类
     this->grp = new group(this);
+    this->sltTeacher = NULL;
     this->rx.setPattern(QString("^[A-Za-z0-9]+$")); //设置密码格式为数字与大小写字母
     //加入教师按钮组
     this->btnGroup.addButton(ui->radioButton_male,1);
@@ -76,7 +75,7 @@ registForm::registForm(QWidget *parent) :
         }
     });
     connect(ui->toolButton_select_teacher,&QToolButton::clicked,[=](){
-        sltTeacher = new selectTeacherForm();
+        this->sltTeacher = new selectTeacherForm();
         connect(this->sltTeacher,&selectTeacherForm::selectedID,[=](QString & ID){  //连接返回教师ID的信号与设置教师ID的槽
             ui->lineEdit_groupTeacher->setText(ID); //设置教师ID输入栏
             if(sltTeacher != NULL)
@@ -380,10 +379,11 @@ void registForm::userRegist()   //用户注册
 }
 void registForm::closeEvent(QCloseEvent *event) //窗口关闭事件
 {
-    if(sltTeacher!=NULL)  //如果选择教师窗口存在则一并关闭
+    if(!sltTeacher->isHidden())  //如果选择教师窗口存在则一并关闭
     {
         sltTeacher->close();
         delete this->sltTeacher;
+        this->sltTeacher = NULL;
     }
     event->accept();
 }
